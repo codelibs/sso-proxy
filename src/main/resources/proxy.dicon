@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" "http://www.seasar.org/dtd/components24.dtd">
+<components>
+  <include path="rewriter.dicon"/>
+<!-- Forwarder -->
+  <component name="defaultForwarder" class="jp.sf.ssoproxy.forwarder.impl.DirectForwarder">
+  </component>
+  <component name="htmlForwarder" class="jp.sf.ssoproxy.forwarder.impl.HtmlForwarder">
+  </component>
+<!-- RequestBuilder -->
+  <component name="defaultRequestBuilder" class="jp.sf.ssoproxy.builder.impl.DefaultRequestBuilderImpl">
+  </component>
+<!-- RequestBuilderChain -->
+  <component name="defaultRequestBuilderChain" class="jp.sf.ssoproxy.builder.RequestBuilderChain">
+    <property name="requestBuilders">new jp.sf.ssoproxy.builder.RequestBuilder[]{defaultRequestBuilder}</property>
+  </component>
+<!-- AccessManager -->
+  <component name="defaultAccessManager" class="jp.sf.ssoproxy.access.impl.AccessManagerImpl">
+    <property name="requestBuilderChain">defaultRequestBuilderChain</property>
+  </component>
+<!-- AuthConfig -->
+  <component name="palportalAuthConfig" class="jp.sf.ssoproxy.config.impl.JetspeedAuthConfigImpl">
+    <property name="authPageMethod">"POST"</property>
+    <property name="authPageUrl">"http://localhost:8081/palportal/login/j_security_check"</property>
+    <property name="authPageEncoding">"UTF-8"</property>
+    <property name="authPageDataList">{#{"method":"POST", "name":"j_username", "value":"USERNAME"}, #{"method":"POST", "name":"j_password", "value":"PASSWORD"}}</property>
+    <property name="loginPageMethod">"GET"</property>
+    <property name="loginPageUrl">"http://localhost:8081/palportal/login/redirector"</property>
+    <property name="loginPageEncoding">"UTF-8"</property>
+    <property name="loginPageDataList">null</property>
+    <property name="loginPageKey">"/images/login_logo.gif"</property>
+    <property name="usernameKey">"USERNAME"</property>
+    <property name="usernameAttributeKey">"palportal.username"</property>
+    <property name="passwordKey">"PASSWORD"</property>
+    <property name="passwordAttributeKey">"palportal.password"</property>
+  </component>
+<!-- HostConfig -->
+  <component name="palportalHostConfig" class="jp.sf.ssoproxy.config.impl.HostConfigImpl">
+    <property name="name">"PALPORTAL"</property>
+    <property name="host">"localhost"</property>
+    <property name="port">"8081"</property>
+    <property name="encoding">"UTF-8"</property>
+    <property name="forwarderMap">#{"text/html":"htmlForwarder"}</property>
+    <property name="authConfigs">new jp.sf.ssoproxy.config.AuthConfig[]{palportalAuthConfig}</property>
+  </component>
+<!-- ProxyConfig -->
+  <component name="proxyConfig" class="jp.sf.ssoproxy.config.impl.ProxyConfigImpl">
+    <arg>new jp.sf.ssoproxy.config.HostConfig[]{palportalHostConfig}</arg>
+    <property name="rootPath">"/ssoproxy/proxy"</property>
+  </component>
+</components>

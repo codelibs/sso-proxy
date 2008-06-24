@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://portals.apache.org/jetspeed" xmlns:js="http://portals.apache.org/jetspeed" xmlns:dc="http://www.purl.org/dc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="ssoproxy" version="1.0" xsi:schemaLocation="http://portals.apache.org/jetspeed http://portals.apache.org/jetspeed-2/2.1/schemas/jetspeed-portlet.xsd">
+  <dc:title>SSO Proxy Portlets</dc:title>
+  <dc:creator>SSO Proxy Team</dc:creator>
+  <js:services>
+    <js:service name="UserManager"/>
+<!--
+    <js:service name="SecurityProvider"/>
+    <js:service name="GroupManager"/>
+    <js:service name="RoleManager"/>
+    <js:service name="ApplicationServerManager"/>
+    <js:service name="DeploymentManager"/>
+    <js:service name="EntityAccessor"/>
+    <js:service name="WindowAccessor"/>
+    <js:service name="PageManager"/>
+    <js:service name="PermissionManager"/>
+    <js:service name="PortalAdministration"/>
+    <js:service name="PortletFactory"/>
+    <js:service name="PortalAdministration"/>
+    <js:service name="PortletRegistryComponent"/>
+    <js:service name="PortalStatistics"/>
+    <js:service name="Profiler"/>
+    <js:service name="SearchComponent"/>
+    <js:service name="SSO"/>
+    <js:service name="DecorationFactory"/>
+    <js:service name="SecurityAccessController"/>
+    <js:service name="PortletTrackingManager"/>
+    <js:service name='AuditActivity'/>
+-->
+  </js:services>
+</portlet-app>

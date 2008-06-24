@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" "http://www.seasar.org/dtd/components24.dtd">
+<components>
+  <component name="aElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"href"</arg>
+  </component>
+  <component name="appletElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"codebase"</arg>
+  </component>
+  <component name="baseElementHandler" class="jp.sf.ssoproxy.handler.element.BaseElementHandler" instance="prototype"/>
+  <component name="bodyElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="brElementHandler" class="jp.sf.ssoproxy.handler.element.BrElementHandler" instance="prototype"/>
+  <component name="frameElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+<!-- TODO: Post method -->
+  <component name="formElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"action"</arg>
+  </component>
+  <component name="iframeElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="imgElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="inputElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="linkElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"href"</arg>
+  </component>
+  <component name="scriptElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="tableElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="tdElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="trElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+<!-- Default Element Handler -->
+  <component name="defaultElementHandler" class="jp.sf.ssoproxy.handler.element.DefaultElementHandler" instance="prototype"/>
+<!-- HtmlHandler -->
+  <component name="defaultHtmlHandler" class="jp.sf.ssoproxy.handler.html.HtmlHandler" instance="prototype">
+    <arg>#{
+"aElementHandler":aElementHandler,
+"appletElementHandler":appletElementHandler,
+"baseElementHandler":baseElementHandler,
+"bodyElementHandler":bodyElementHandler,
+"brElementHandler":brElementHandler,
+"frameElementHandler":frameElementHandler,
+"formElementHandler":formElementHandler,
+"iframeElementHandler":iframeElementHandler,
+"imgElementHandler":imgElementHandler,
+"inputElementHandler":inputElementHandler,
+"linkElementHandler":linkElementHandler,
+"scriptElementHandler":scriptElementHandler,
+"tableElementHandler":tableElementHandler,
+"tdElementHandler":tdElementHandler,
+"trElementHandler":trElementHandler,
+"defaultElementHandler":defaultElementHandler
+}</arg>
+  </component>
+</components>
