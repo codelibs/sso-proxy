@@ -34,6 +34,21 @@
     <property name="passwordKey">"PASSWORD"</property>
     <property name="passwordAttributeKey">"palportal.password"</property>
   </component>
+  <component name="redmineAuthConfig" class="jp.sf.ssoproxy.config.impl.JetspeedAuthConfigImpl">
+    <property name="authPageMethod">"POST"</property>
+    <property name="authPageUrl">"http://demo.redmine.jp/login"</property>
+    <property name="authPageEncoding">"UTF-8"</property>
+    <property name="authPageDataList">{#{"method":"POST", "name":"username", "value":"USERNAME"}, #{"method":"POST", "name":"password", "value":"PASSWORD"}}</property>
+    <property name="loginPageMethod">"GET"</property>
+    <property name="loginPageUrl">"http://demo.redmine.jp/login"</property>
+    <property name="loginPageEncoding">"UTF-8"</property>
+    <property name="loginPageDataList">null</property>
+    <property name="loginPageKey">"a href=\"/login\" class=\"login\""</property>
+    <property name="usernameKey">"USERNAME"</property>
+    <property name="usernameAttributeKey">"redmine.username"</property>
+    <property name="passwordKey">"PASSWORD"</property>
+    <property name="passwordAttributeKey">"redmine.password"</property>
+  </component>
 <!-- HostConfig -->
   <component name="palportalHostConfig" class="jp.sf.ssoproxy.config.impl.HostConfigImpl">
     <property name="name">"PALPORTAL"</property>
@@ -43,9 +58,16 @@
     <property name="forwarderMap">#{"text/html":"htmlForwarder"}</property>
     <property name="authConfigs">new jp.sf.ssoproxy.config.AuthConfig[]{palportalAuthConfig}</property>
   </component>
+  <component name="redmineHostConfig" class="jp.sf.ssoproxy.config.impl.HostConfigImpl">
+    <property name="name">"REDMINE"</property>
+    <property name="host">"demo.redmine.jp"</property>
+    <property name="encoding">"UTF-8"</property>
+    <property name="forwarderMap">#{"text/html":"htmlForwarder", "text/xml":"htmlForwarder"}</property>
+    <property name="authConfigs">new jp.sf.ssoproxy.config.AuthConfig[]{redmineAuthConfig}</property>
+  </component>
 <!-- ProxyConfig -->
   <component name="proxyConfig" class="jp.sf.ssoproxy.config.impl.ProxyConfigImpl">
-    <arg>new jp.sf.ssoproxy.config.HostConfig[]{palportalHostConfig}</arg>
+    <arg>new jp.sf.ssoproxy.config.HostConfig[]{palportalHostConfig, redmineHostConfig}</arg>
     <property name="rootPath">"/ssoproxy/proxy"</property>
   </component>
 </components>
