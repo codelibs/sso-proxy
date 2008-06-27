@@ -112,6 +112,9 @@ public class ProxyServlet extends HttpServlet {
 
             // TODO error
 
+            // set the status to a response
+            response.setStatus(statusCode);
+
             // store a content to a client
             accessManager.sendResponse(request, response, resultMap,
                     proxyConfig, hostConfigName, hostConfig

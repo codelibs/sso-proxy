@@ -121,6 +121,10 @@ public class AccessManagerImpl implements AccessManager {
 
     private void setResponseBody(Map<String, Object> resultMap,
             InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return;
+        }
+
         File responseBodyFile = File.createTempFile(RESPONSE_BODY_FILE_PREFIX,
                 TEMP_FILE_SUFFIX);
         resultMap.put(SSOProxyConstraints.RESPONSE_BODY_FILE_PARAM,
@@ -143,6 +147,10 @@ public class AccessManagerImpl implements AccessManager {
 
     private void setLoginResponseBody(Map<String, Object> resultMap,
             InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return;
+        }
+
         File responseBodyFile = File.createTempFile(RESPONSE_BODY_FILE_PREFIX,
                 TEMP_FILE_SUFFIX);
         resultMap.put(SSOProxyConstraints.RESPONSE_BODY_FILE_PARAM,
