@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.sf.ssoproxy.config.AuthConfig;
+import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.config.HostConfig;
 
 public class HostConfigImpl implements HostConfig {
@@ -43,7 +44,7 @@ public class HostConfigImpl implements HostConfig {
     }
 
     public AuthConfig getAuthConfig(String method, String url,
-            Map<String, String[]> params) {
+            Map<String, String[]> params) throws ConfigException {
         if (authConfigs != null) {
             for (int i = 0; i < authConfigs.length; i++) {
                 if (authConfigs[i].checkLoginPageUrl(method, url, params)) {

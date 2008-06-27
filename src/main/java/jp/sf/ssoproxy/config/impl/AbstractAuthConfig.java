@@ -1,10 +1,8 @@
 package jp.sf.ssoproxy.config.impl;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import jp.sf.ssoproxy.SSOProxyConstraints;
-import jp.sf.ssoproxy.access.AccessException;
 import jp.sf.ssoproxy.config.AuthConfig;
+import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.util.UrlBuilderUtil;
 
 import org.apache.commons.httpclient.HttpMethod;
@@ -48,7 +46,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#checkLoginPageUrl(java.lang.String)
      */
     public boolean checkLoginPageUrl(String method, String url,
-            Map<String, String[]> params) {
+            Map<String, String[]> params) throws ConfigException {
         //TODO method and params
         if (url != null && url.equals(loginPageUrl)) {
             return true;
@@ -56,7 +54,8 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return false;
     }
 
-    public boolean checkLoginPage(InputStream inputStream) {
+    public boolean checkLoginPage(InputStream inputStream)
+            throws ConfigException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     inputStream, loginPageEncoding));
@@ -67,12 +66,11 @@ public abstract class AbstractAuthConfig implements AuthConfig {
                 }
                 line = reader.readLine();
             }
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //        } catch (UnsupportedEncodingException e) {
+            //        } catch (IOException e) {
+        } catch (Exception e) {
+            // error
+            throw new ConfigException("000013", e);
         }
         return false;
     }
@@ -80,7 +78,8 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#buildLoginHttpMethod()
      */
-    public HttpMethod buildLoginHttpMethod(HttpServletRequest request)  throws AccessException{
+    public HttpMethod buildLoginHttpMethod(HttpServletRequest request)
+            throws ConfigException {
         if (SSOProxyConstraints.POST_METHOD.equals(loginPageMethod)) {
             return UrlBuilderUtil.buildPostMethod(loginPageUrl,
                     getParameterMap(request, SSOProxyConstraints.GET_METHOD,
@@ -92,14 +91,15 @@ public abstract class AbstractAuthConfig implements AuthConfig {
                     getParameterMap(request, SSOProxyConstraints.GET_METHOD,
                             loginPageDataList), loginPageEncoding);
         }
-        //TODO msg
-        throw new IllegalArgumentException();
+        // error
+        throw new ConfigException("000014", new Object[] { loginPageUrl });
     }
 
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#buildAuthHttpMethod()
      */
-    public HttpMethod buildAuthHttpMethod(HttpServletRequest request)  throws AccessException{
+    public HttpMethod buildAuthHttpMethod(HttpServletRequest request)
+            throws ConfigException {
         if (SSOProxyConstraints.POST_METHOD.equals(authPageMethod)) {
             return UrlBuilderUtil.buildPostMethod(authPageUrl, getParameterMap(
                     request, SSOProxyConstraints.GET_METHOD, authPageDataList),
@@ -110,12 +110,13 @@ public abstract class AbstractAuthConfig implements AuthConfig {
                     request, SSOProxyConstraints.GET_METHOD, authPageDataList),
                     authPageEncoding);
         }
-        //TODO msg
-        throw new IllegalArgumentException();
+        // error
+        throw new ConfigException("000015", new Object[] { authPageUrl });
     }
 
     protected Map<String, String[]> getParameterMap(HttpServletRequest request,
-            String method, List<Map<String, String>> dataList)  throws AccessException{
+            String method, List<Map<String, String>> dataList)
+            throws ConfigException {
         Map<String, String[]> params = new HashMap<String, String[]>();
         if (dataList != null) {
             for (Map<String, String> entry : dataList) {
@@ -131,7 +132,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     }
 
     protected abstract String getDataValue(HttpServletRequest request,
-            String value) throws AccessException;
+            String value) throws ConfigException;
 
     public String getAuthPageMethod() {
         return authPageMethod;

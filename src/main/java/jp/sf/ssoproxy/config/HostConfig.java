@@ -14,5 +14,5 @@ public interface HostConfig {
     public abstract String getForwarderName(String mimeType);
 
     public abstract AuthConfig getAuthConfig(String method, String url,
-            Map<String, String[]> params);
+            Map<String, String[]> params) throws ConfigException;
 }

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import jp.sf.ssoproxy.SSOProxyConstraints;
 import jp.sf.ssoproxy.SSOProxyException;
 import jp.sf.ssoproxy.forwarder.Forwarder;
 import jp.sf.ssoproxy.forwarder.ForwarderException;
@@ -28,8 +29,9 @@ public class DirectForwarder implements Forwarder {
                 bytes = null;
             }
         } catch (IOException e) {
-            //TODO
-            throw new ForwarderException("TODO.msg");
+            // error
+            throw new ForwarderException("000007", new Object[] { props
+                    .get(SSOProxyConstraints.URL_PARAM) }, e);
         }
     }
 

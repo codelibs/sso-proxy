@@ -284,26 +284,27 @@ public class AccessManagerImpl implements AccessManager {
 
         HttpClient httpclient = getHttpClient();
 
-        String cookieMapName = SSOProxyConstraints.STORED_COOKIE_LIST
+        String cookieListName = SSOProxyConstraints.STORED_COOKIE_LIST
                 + hostConfig.getName();
 
         HttpSession httpSession = request.getSession();
-        setCookiesToServer(httpSession, cookieMapName, httpclient);
+        setCookiesToServer(httpSession, cookieListName, httpclient);
 
-        HttpMethod httpMethod = authConfig.buildLoginHttpMethod(request);
-
-        // build request
-        requestBuilderChain.reset();
-        requestBuilderChain.build(RequestBuilder.LOGIN_PROCESS, request,
-                hostConfig, httpMethod);
-
+        HttpMethod httpMethod = null;
         try {
+            httpMethod = authConfig.buildLoginHttpMethod(request);
+
+            // build request
+            requestBuilderChain.reset();
+            requestBuilderChain.build(RequestBuilder.LOGIN_PROCESS, request,
+                    hostConfig, httpMethod);
+
             // execute method
             int result = httpclient.executeMethod(httpMethod);
 
             // update cookies
             setCookiesToProxy(httpSession, httpclient.getState().getCookies(),
-                    cookieMapName);
+                    cookieListName);
 
             Map<String, Object> resultMap = buildResult(httpMethod.getURI()
                     .toString(), httpMethod, result);
@@ -313,10 +314,13 @@ public class AccessManagerImpl implements AccessManager {
         } catch (Exception e) {
             // } catch (HttpException e) {
             // } catch (IOException e) {
-            // TODO message
-            throw new AccessException("TODO.msg", e);
+            // error
+            throw new AccessException("000016", new Object[] { hostConfig
+                    .getName() }, e);
         } finally {
-            httpMethod.releaseConnection();
+            if (httpMethod != null) {
+                httpMethod.releaseConnection();
+            }
         }
     }
 
@@ -332,14 +336,15 @@ public class AccessManagerImpl implements AccessManager {
         HttpSession httpSession = request.getSession();
         setCookiesToServer(httpSession, cookieMapName, httpclient);
 
-        HttpMethod httpMethod = authConfig.buildAuthHttpMethod(request);
-
-        // build request
-        requestBuilderChain.reset();
-        requestBuilderChain.build(RequestBuilder.AUTH_PROCESS, request,
-                hostConfig, httpMethod);
-
+        HttpMethod httpMethod = null;
         try {
+            httpMethod = authConfig.buildAuthHttpMethod(request);
+
+            // build request
+            requestBuilderChain.reset();
+            requestBuilderChain.build(RequestBuilder.AUTH_PROCESS, request,
+                    hostConfig, httpMethod);
+
             // execute method
             int result = httpclient.executeMethod(httpMethod);
 
@@ -354,10 +359,13 @@ public class AccessManagerImpl implements AccessManager {
         } catch (Exception e) {
             // } catch (HttpException e) {
             // } catch (IOException e) {
-            // TODO message
-            throw new AccessException("TODO.msg", e);
+            // error
+            throw new AccessException("000017", new Object[] { hostConfig
+                    .getName() }, e);
         } finally {
-            httpMethod.releaseConnection();
+            if (httpMethod != null) {
+                httpMethod.releaseConnection();
+            }
         }
     }
 
@@ -399,8 +407,9 @@ public class AccessManagerImpl implements AccessManager {
 
         Forwarder forwarder = (Forwarder) container.getComponent(forwarderName);
         if (forwarder == null) {
-            //TODO
-            throw new AccessException("TODO.msg");
+            // error
+            throw new AccessException("000018", new Object[] { forwarderName,
+                    hostConfigName });
         }
 
         Map<String, Object> props = new HashMap<String, Object>();
@@ -420,8 +429,9 @@ public class AccessManagerImpl implements AccessManager {
         } catch (Exception e) {
             //        } catch (SSOProxyException e) {
             //        } catch (IOException e) {
-            //TODO
-            throw new AccessException("TODO.msg", e);
+            // error
+            throw new AccessException("000019", new Object[] { forwarderName,
+                    hostConfigName });
         }
 
     }
@@ -443,7 +453,9 @@ public class AccessManagerImpl implements AccessManager {
                         .buildProxyUrl(redirectLocation));
             } catch (IOException e) {
                 // redirect failed
-                throw new AccessException("TODO.msg", e);
+                // error
+                throw new AccessException("000020",
+                        new Object[] { redirectLocation }, e);
             }
         } else {
             throw new AccessException("TODO.msg");

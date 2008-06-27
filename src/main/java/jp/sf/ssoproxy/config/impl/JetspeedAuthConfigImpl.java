@@ -5,7 +5,7 @@ import java.util.prefs.Preferences;
 import javax.servlet.http.HttpServletRequest;
 
 import jp.sf.ssoproxy.SSOProxyConstraints;
-import jp.sf.ssoproxy.access.AccessException;
+import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.util.JetspeedUtil;
 
 import org.apache.jetspeed.security.SecurityException;
@@ -23,14 +23,14 @@ public class JetspeedAuthConfigImpl extends AbstractAuthConfig {
 
     @Override
     protected String getDataValue(HttpServletRequest request, String value)
-            throws AccessException {
+            throws ConfigException {
         if (usernameKey.equals(value)) {
             // from user attribute
             String remoteUser = (String) request.getSession().getAttribute(
                     SSOProxyConstraints.CURRENT_REMOTE_USER);
             if (remoteUser == null) {
-                //TODO    
-                throw new IllegalStateException();
+                // error    
+                throw new ConfigException("000009");
             }
 
             try {
@@ -39,16 +39,16 @@ public class JetspeedAuthConfigImpl extends AbstractAuthConfig {
                 Preferences prefs = user.getUserAttributes();
                 return prefs.get(usernameAttributeKey, "");
             } catch (SecurityException e) {
-                // TODO 
-                throw new AccessException("TODO.msg");
+                // error    
+                throw new ConfigException("000010", new Object[] { remoteUser });
             }
         } else if (passwordKey.equals(value)) {
             // from user attribute
             String remoteUser = (String) request.getSession().getAttribute(
                     SSOProxyConstraints.CURRENT_REMOTE_USER);
             if (remoteUser == null) {
-                //TODO    
-                throw new IllegalStateException();
+                // error    
+                throw new ConfigException("000011");
             }
 
             try {
@@ -57,8 +57,8 @@ public class JetspeedAuthConfigImpl extends AbstractAuthConfig {
                 Preferences prefs = user.getUserAttributes();
                 return prefs.get(passwordAttributeKey, "");
             } catch (SecurityException e) {
-                // TODO 
-                throw new AccessException("TODO.msg");
+                // error    
+                throw new ConfigException("000012", new Object[] { remoteUser });
             }
         }
         return value;

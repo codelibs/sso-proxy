@@ -5,21 +5,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jp.sf.ssoproxy.access.AccessException;
-
 import org.apache.commons.httpclient.HttpMethod;
 
 public interface AuthConfig {
 
     public abstract boolean checkLoginPageUrl(String method, String url,
-            Map<String, String[]> params);
+            Map<String, String[]> params) throws ConfigException;
 
-    public abstract boolean checkLoginPage(InputStream inputStream);
+    public abstract boolean checkLoginPage(InputStream inputStream)
+            throws ConfigException;
 
     public abstract HttpMethod buildLoginHttpMethod(HttpServletRequest request)
-            throws AccessException;
+            throws ConfigException;
 
     public abstract HttpMethod buildAuthHttpMethod(HttpServletRequest request)
-            throws AccessException;
+            throws ConfigException;
 
 }

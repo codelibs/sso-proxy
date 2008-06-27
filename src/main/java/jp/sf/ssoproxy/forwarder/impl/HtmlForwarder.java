@@ -1,13 +1,8 @@
 package jp.sf.ssoproxy.forwarder.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import jp.sf.ssoproxy.SSOProxyConstraints;
@@ -16,17 +11,21 @@ import jp.sf.ssoproxy.forwarder.Forwarder;
 import jp.sf.ssoproxy.forwarder.ForwarderException;
 import jp.sf.ssoproxy.handler.html.HtmlHandler;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cyberneko.html.parsers.SAXParser;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.log.Logger;
 import org.xml.sax.InputSource;
 
 public class HtmlForwarder implements Forwarder {
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(HtmlForwarder.class);
+
     private static final String DEFAULT_HTML_HANDLER_NAME = "defaultHtmlHandler";
 
     private static final String DEFAULT_INPUT_ENCODING = "UTF-8";
-
-    private static final Logger logger = Logger.getLogger(HtmlForwarder.class);
 
     private S2Container container;
 
@@ -51,29 +50,9 @@ public class HtmlForwarder implements Forwarder {
                 props.get(SSOProxyConstraints.URL_PARAM));
         htmlHandler.getProperties().put(SSOProxyConstraints.PROXY_CONFIG_PARAM,
                 props.get(SSOProxyConstraints.PROXY_CONFIG_PARAM));
-        //        htmlHandler.getProperties().put(SSOProxyConstraints.REQUEST_PARAM,
-        //                (String) props.get(SSOProxyConstraints.REQUEST_PARAM));
-        //        htmlHandler.getProperties().put(SSOProxyConstraints.RESPONSE_PARAM,
-        //                (String) props.get(SSOProxyConstraints.RESPONSE_PARAM));
 
         InputSource inputSource = new InputSource(is);
         inputSource.setEncoding(inputEncoding);
-        // for debug
-        //        InputSource inputSource;
-        //        try {
-        //            BufferedReader reader = new BufferedReader(new InputStreamReader(
-        //                    is, inputEncoding));
-        //            System.out.println("TEST: " + reader.readLine());
-        //            System.out.println("TEST: " + reader.readLine());
-        //            System.out.println("TEST: " + reader.readLine());
-        //            inputSource = new InputSource(reader);
-        //        } catch (UnsupportedEncodingException e1) {
-        //            inputSource = new InputSource(is);
-        //            inputSource.setEncoding(inputEncoding);
-        //        } catch (IOException e1) {
-        //            inputSource = new InputSource(is);
-        //            inputSource.setEncoding(inputEncoding);
-        //        }
 
         try {
             SAXParser parser = new SAXParser();
@@ -88,8 +67,8 @@ public class HtmlForwarder implements Forwarder {
             }
             OutputStreamWriter osw = new OutputStreamWriter(os, encoding);
             osw.write(htmlHandler.toString());
-            if (logger.isDebugEnabled()) {
-                logger.debug("content=" + htmlHandler.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("content=" + htmlHandler.toString());
             }
             osw.flush();
         } catch (Exception e) {
@@ -98,8 +77,9 @@ public class HtmlForwarder implements Forwarder {
             // } catch (UnsupportedEncodingException e) {
             // } catch (SAXException e) {
             // } catch (IOException e) {
-            //TODO msg
-            throw new ForwarderException("TODO.msg", e);
+            // error
+            throw new ForwarderException("000006", new Object[] { props
+                    .get(SSOProxyConstraints.URL_PARAM) }, e);
         }
     }
 

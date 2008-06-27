@@ -47,4 +47,14 @@ public class SSOProxyConstraints {
 
     public static final String CURRENT_REMOTE_USER = "CurrentRemoteUser";
 
+    public static final String ERROR_CODE = "ErrorCode";
+
+    public static final String ERROR_MESSAGE = "ErrorMessage";
+
+    public static final String SYSTEM_LOCALE_KEY = "sytemLocale";
+
+    public static final String ERROR_JSP_KEY = "errorPage";
+
+    public static final String DEFAULT_ERROR_JSP = "/error.jsp";
+
 }
