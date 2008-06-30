@@ -57,4 +57,6 @@ public class SSOProxyConstraints {
 
     public static final String DEFAULT_ERROR_JSP = "/error.jsp";
 
+    public static final String CURRENT_REMOTE_USER_KEY = "currentUserKey";
+
 }
