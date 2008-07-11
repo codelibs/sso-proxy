@@ -99,7 +99,7 @@ public class HtmlHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String name)
             throws SAXException {
         String tagName = name.toLowerCase();
-        getElementHandler(tagName).endElement(this, uri, localName, tagName);
+        getElementHandler(tagName).endElement(this, uri, localName, name);
     }
 
     /* (non-Javadoc)
@@ -117,7 +117,7 @@ public class HtmlHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String name,
             Attributes attributes) throws SAXException {
         String tagName = name.toLowerCase();
-        getElementHandler(tagName).startElement(this, uri, localName, tagName,
+        getElementHandler(tagName).startElement(this, uri, localName, name,
                 attributes);
     }
 

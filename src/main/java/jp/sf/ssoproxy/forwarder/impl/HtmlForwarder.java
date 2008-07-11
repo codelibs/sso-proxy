@@ -18,18 +18,66 @@ import org.seasar.framework.container.S2Container;
 import org.xml.sax.InputSource;
 
 public class HtmlForwarder implements Forwarder {
+
     /**
      * Logger for this class
      */
     private static final Log log = LogFactory.getLog(HtmlForwarder.class);
 
+    private static final String HTML_FEATURES_SCANNER_NOTIFY_BUILTIN_REFS = "http://cyberneko.org/html/features/scanner/notify-builtin-refs";
+
+    private static final String XML_FEATURES_SCANNER_NOTIFY_BUILTIN_REFS = "http://apache.org/xml/features/scanner/notify-builtin-refs";
+
+    private static final String XML_FEATURES_SCANNER_NOTIFY_CHAR_REFS = "http://apache.org/xml/features/scanner/notify-char-refs";
+
+    private static final String HTML_FEATURES_SCANNER_CDATA_SECTIONS = "http://cyberneko.org/html/features/scanner/cdata-sections";
+
+    private static final String HTML_PROPERTIES_NAMES_ATTRS = "http://cyberneko.org/html/properties/names/attrs";
+
+    private static final String HTML_PROPERTIES_NAMES_ELEMS = "http://cyberneko.org/html/properties/names/elems";
+
+    private static final String HTML_PROPERTIES_DEFAULT_ENCODING = "http://cyberneko.org/html/properties/default-encoding";
+
     private static final String DEFAULT_HTML_HANDLER_NAME = "defaultHtmlHandler";
 
     private static final String DEFAULT_INPUT_ENCODING = "UTF-8";
 
+    private static final String UPPER_CASE_ELEMENT = "upper";
+
+    private static final String LOWER_CASE_ELEMENT = "lower";
+
+    private static final String NO_CHANGE_CASE_ELEMENT = "match";
+
+    private static final String UPPER_CASE_ATTRIBUTE = "upper";
+
+    private static final String LOWER_CASE_ATTRIBUTE = "lower";
+
+    private static final String NO_CHANGE_CASE_ATTRIBUTE = "no-change";
+
     private S2Container container;
 
     private String htmlHandlerName;
+
+    private String elementNameCase;
+
+    private String attributeNameCase;
+
+    private boolean xmlNotifyCharRefs;
+
+    private boolean xmlNotifyBuiltinRefs;
+
+    private boolean htmlNotifyBuiltinRefs;
+
+    private boolean cdataSections;
+
+    public HtmlForwarder() {
+        elementNameCase = NO_CHANGE_CASE_ELEMENT;
+        attributeNameCase = NO_CHANGE_CASE_ATTRIBUTE;
+        xmlNotifyCharRefs = true;
+        xmlNotifyBuiltinRefs = true;
+        htmlNotifyBuiltinRefs = true;
+        cdataSections = true;
+    }
 
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.forwarder.impl.Forwarder#forward(java.util.Map, java.io.InputStream, java.io.OutputStream)
@@ -57,6 +105,22 @@ public class HtmlForwarder implements Forwarder {
         try {
             SAXParser parser = new SAXParser();
             parser.setContentHandler(htmlHandler);
+
+            // Features
+            parser.setFeature(XML_FEATURES_SCANNER_NOTIFY_CHAR_REFS,
+                    xmlNotifyCharRefs);
+            parser.setFeature(XML_FEATURES_SCANNER_NOTIFY_BUILTIN_REFS,
+                    xmlNotifyBuiltinRefs);
+            parser.setFeature(HTML_FEATURES_SCANNER_NOTIFY_BUILTIN_REFS,
+                    htmlNotifyBuiltinRefs);
+            parser.setFeature(HTML_FEATURES_SCANNER_CDATA_SECTIONS,
+                    cdataSections);
+
+            // Properties
+            parser.setProperty(HTML_PROPERTIES_DEFAULT_ENCODING, inputEncoding);
+            parser.setProperty(HTML_PROPERTIES_NAMES_ELEMS, elementNameCase);
+            parser.setProperty(HTML_PROPERTIES_NAMES_ATTRS, attributeNameCase);
+
             parser.parse(inputSource);
 
             String encoding = (String) props
@@ -100,5 +164,69 @@ public class HtmlForwarder implements Forwarder {
 
     public void setHtmlHandlerName(String htmlHandlerName) {
         this.htmlHandlerName = htmlHandlerName;
+    }
+
+    public String getElementNameCase() {
+        return elementNameCase;
+    }
+
+    public void setElementNameCase(String elementNameCase) {
+        if (UPPER_CASE_ELEMENT.equals(elementNameCase)) {
+            this.elementNameCase = UPPER_CASE_ELEMENT;
+        } else if (LOWER_CASE_ELEMENT.equals(elementNameCase)) {
+            this.elementNameCase = LOWER_CASE_ELEMENT;
+        } else if (LOWER_CASE_ELEMENT.equals(elementNameCase)) {
+            this.elementNameCase = NO_CHANGE_CASE_ELEMENT;
+        } else {
+            this.elementNameCase = NO_CHANGE_CASE_ATTRIBUTE;
+        }
+    }
+
+    public String getAttributeNameCase() {
+        return attributeNameCase;
+    }
+
+    public void setAttributeNameCase(String attributeNameCase) {
+        if (UPPER_CASE_ATTRIBUTE.equals(attributeNameCase)) {
+            this.attributeNameCase = UPPER_CASE_ATTRIBUTE;
+        } else if (LOWER_CASE_ATTRIBUTE.equals(attributeNameCase)) {
+            this.attributeNameCase = LOWER_CASE_ATTRIBUTE;
+        } else if (NO_CHANGE_CASE_ATTRIBUTE.equals(attributeNameCase)) {
+            this.attributeNameCase = NO_CHANGE_CASE_ATTRIBUTE;
+        } else {
+            this.attributeNameCase = NO_CHANGE_CASE_ATTRIBUTE;
+        }
+    }
+
+    public boolean isXmlNotifyCharRefs() {
+        return xmlNotifyCharRefs;
+    }
+
+    public void setXmlNotifyCharRefs(boolean xmlNotifyCharRefs) {
+        this.xmlNotifyCharRefs = xmlNotifyCharRefs;
+    }
+
+    public boolean isXmlNotifyBuiltinRefs() {
+        return xmlNotifyBuiltinRefs;
+    }
+
+    public void setXmlNotifyBuiltinRefs(boolean xmlNotifyBuiltinRefs) {
+        this.xmlNotifyBuiltinRefs = xmlNotifyBuiltinRefs;
+    }
+
+    public boolean isHtmlNotifyBuiltinRefs() {
+        return htmlNotifyBuiltinRefs;
+    }
+
+    public void setHtmlNotifyBuiltinRefs(boolean htmlNotifyBuiltinRefs) {
+        this.htmlNotifyBuiltinRefs = htmlNotifyBuiltinRefs;
+    }
+
+    public boolean isCdataSections() {
+        return cdataSections;
+    }
+
+    public void setCdataSections(boolean cdataSections) {
+        this.cdataSections = cdataSections;
     }
 }

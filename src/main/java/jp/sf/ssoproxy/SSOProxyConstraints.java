@@ -26,6 +26,9 @@ public class SSOProxyConstraints {
 
     public static final String INPUT_ENCODING_PARAM = PREFIX + "InputEncoding";
 
+    public static final String CONTENT_TYPE_ENCODING_PARAM = PREFIX
+            + "ContentTypeEncoding";
+
     public static final String URL_PARAM = PREFIX + "Url";
 
     public static final String ORIGINAL_URL_PARAM = PREFIX + "OriginalUrl";

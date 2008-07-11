@@ -222,12 +222,14 @@ public class AccessManagerImpl implements AccessManager {
         if (mimeType == null) {
             mimeType = DEFAULT_CONTENT_TYPE;
         }
+        resultMap.put(SSOProxyConstraints.MIME_TYPE_PARAM, mimeType);
+        resultMap.put(SSOProxyConstraints.URL_PARAM, url);
+        resultMap.put(SSOProxyConstraints.CONTENT_TYPE_ENCODING_PARAM,
+                inputEncoding);
         if (inputEncoding == null) {
             inputEncoding = httpMethod.getParams().getContentCharset();
         }
-        resultMap.put(SSOProxyConstraints.MIME_TYPE_PARAM, mimeType);
         resultMap.put(SSOProxyConstraints.INPUT_ENCODING_PARAM, inputEncoding);
-        resultMap.put(SSOProxyConstraints.URL_PARAM, url);
 
         return resultMap;
     }
@@ -386,11 +388,11 @@ public class AccessManagerImpl implements AccessManager {
         // content type
         String mimeType = (String) resultMap
                 .get(SSOProxyConstraints.MIME_TYPE_PARAM);
-        String inputEncoding = (String) resultMap
-                .get(SSOProxyConstraints.INPUT_ENCODING_PARAM);
+        String contentTypeEncoding = (String) resultMap
+                .get(SSOProxyConstraints.CONTENT_TYPE_ENCODING_PARAM);
         StringBuilder contentType = new StringBuilder(mimeType);
-        if (inputEncoding != null) {
-            contentType.append("; charset=").append(inputEncoding);
+        if (contentTypeEncoding != null) {
+            contentType.append("; charset=").append(contentTypeEncoding);
         }
         response.setContentType(contentType.toString());
 
