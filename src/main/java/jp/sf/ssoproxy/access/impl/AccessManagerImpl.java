@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.DeferredFileOutputStream;
@@ -66,13 +67,19 @@ public class AccessManagerImpl implements AccessManager {
 
     private int downloadThreshold = 1 * 1024 * 1024; // 1m
 
-    private HttpClient getHttpClient() {
+    private HttpClient getHttpClient(HostConfig hostConfig) {
         // TODO multi-thread
         HttpClient httpclient = new HttpClient();
+        // Connection Timeout
         httpclient.getHttpConnectionManager().getParams().setConnectionTimeout(
-                30000);
-        httpclient.getParams().setCookiePolicy(
-                CookiePolicy.BROWSER_COMPATIBILITY);
+                hostConfig.getConnectionTimeout());
+        // Cookie Policy
+        httpclient.getParams().setCookiePolicy(hostConfig.getCookiePolicy());
+        // Single Cookie Header
+        if (hostConfig.isSingleCookieHeader()) {
+            httpclient.getParams().setBooleanParameter(
+                    HttpMethodParams.SINGLE_COOKIE_HEADER, true);
+        }
         //        httpclient.getParams().setVersion(HttpVersion.HTTP_1_0); // HTTP 1.1 returns a content encoded by gzip.
         // TODO proxy
         return httpclient;
@@ -232,7 +239,7 @@ public class AccessManagerImpl implements AccessManager {
             HostConfig hostConfig, String url, String encoding)
             throws AccessException {
 
-        HttpClient httpclient = getHttpClient();
+        HttpClient httpclient = getHttpClient(hostConfig);
 
         String cookieMapName = SSOProxyConstraints.STORED_COOKIE_LIST
                 + hostConfig.getName();
@@ -282,7 +289,7 @@ public class AccessManagerImpl implements AccessManager {
             HostConfig hostConfig, AuthConfig authConfig)
             throws AccessException {
 
-        HttpClient httpclient = getHttpClient();
+        HttpClient httpclient = getHttpClient(hostConfig);
 
         String cookieListName = SSOProxyConstraints.STORED_COOKIE_LIST
                 + hostConfig.getName();
@@ -328,7 +335,7 @@ public class AccessManagerImpl implements AccessManager {
             HostConfig hostConfig, AuthConfig authConfig)
             throws AccessException {
 
-        HttpClient httpclient = getHttpClient();
+        HttpClient httpclient = getHttpClient(hostConfig);
 
         String cookieMapName = SSOProxyConstraints.STORED_COOKIE_LIST
                 + hostConfig.getName();
@@ -422,16 +429,20 @@ public class AccessManagerImpl implements AccessManager {
         props.put(SSOProxyConstraints.PROXY_CONFIG_PARAM, proxyConfig);
         //        props.put(SSOProxyConstraints.REQUEST_PARAM, request);
         //        props.put(SSOProxyConstraints.RESPONSE_PARAM, response);
+
+        InputStream inputStream = (InputStream) resultMap
+                .get(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM);
         try {
-            forwarder.forward(props, (InputStream) resultMap
-                    .get(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM),
-                    response.getOutputStream());
+            if (inputStream != null) {
+                forwarder.forward(props, inputStream, response
+                        .getOutputStream());
+            }
         } catch (Exception e) {
             //        } catch (SSOProxyException e) {
             //        } catch (IOException e) {
             // error
             throw new AccessException("000019", new Object[] { forwarderName,
-                    hostConfigName });
+                    hostConfigName }, e);
         }
 
     }

@@ -47,8 +47,22 @@ public abstract class AbstractAuthConfig implements AuthConfig {
      */
     public boolean checkLoginPageUrl(String method, String url,
             Map<String, String[]> params) throws ConfigException {
-        //TODO method and params
-        if (url != null && url.equals(loginPageUrl)) {
+        if (url != null && url.equals(loginPageUrl)
+                && loginPageMethod.equals(method)) {
+            if (loginPageDataList != null) {
+                for (Map<String, String> map : loginPageDataList) {
+                    String name = map.get(DATA_NAME);
+                    String value = map.get(DATA_VALUE);
+                    String[] values = params.get(name);
+                    if (value == null || values == null) {
+                        return false;
+                    } else if (values.length == 0) {
+                        return false;
+                    } else if (!value.equals(values[0])) {
+                        return false;
+                    }
+                }
+            }
             return true;
         }
         return false;

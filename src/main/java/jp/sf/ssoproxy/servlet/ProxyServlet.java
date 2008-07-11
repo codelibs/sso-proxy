@@ -184,6 +184,7 @@ public class ProxyServlet extends HttpServlet {
         } catch (Exception e) {
             // error
             ErrorHandlingUtil.printLog(e, systemLocale);
+            //TODO error
             ErrorHandlingUtil.forwardErrorPage(request, response, e, errorPage);
             return;
         } finally {

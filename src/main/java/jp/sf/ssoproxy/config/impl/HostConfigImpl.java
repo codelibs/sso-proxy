@@ -3,6 +3,8 @@ package jp.sf.ssoproxy.config.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.config.HostConfig;
@@ -36,11 +38,20 @@ public class HostConfigImpl implements HostConfig {
 
     private AuthConfig[] authConfigs;
 
+    private boolean singleCookieHeader;
+
+    private String cookiePolicy;
+
+    private int connectionTimeout;
+
     public HostConfigImpl() {
         scheme = HTTP_SCHEME;
         encoding = UTF_8;
         accessManagerName = DEFAULT_ACCESS_MANAGER;
         forwarderMap = new HashMap<String, String>();
+        cookiePolicy = CookiePolicy.BROWSER_COMPATIBILITY;
+        singleCookieHeader = false;
+        connectionTimeout = 30000;
     }
 
     public AuthConfig getAuthConfig(String method, String url,
@@ -135,6 +146,30 @@ public class HostConfigImpl implements HostConfig {
 
     public void setAuthConfigs(AuthConfig[] authConfigs) {
         this.authConfigs = authConfigs;
+    }
+
+    public boolean isSingleCookieHeader() {
+        return singleCookieHeader;
+    }
+
+    public void setSingleCookieHeader(boolean singleCookieHeader) {
+        this.singleCookieHeader = singleCookieHeader;
+    }
+
+    public String getCookiePolicy() {
+        return cookiePolicy;
+    }
+
+    public void setCookiePolicy(String cookiePolicy) {
+        this.cookiePolicy = cookiePolicy;
+    }
+
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
     }
 
 }
