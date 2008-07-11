@@ -5,6 +5,11 @@ import jp.sf.ssoproxy.handler.html.HtmlHandler;
 import org.xml.sax.Attributes;
 
 public class DefaultElementHandler implements ElementHandler {
+    private String quotationMark;
+
+    public DefaultElementHandler() {
+        quotationMark = DEFAULT_QUOTATION_MARK;
+    }
 
     public void startElement(HtmlHandler htmlHandler, String uri,
             String localName, String name, Attributes attributes) {
@@ -14,9 +19,10 @@ public class DefaultElementHandler implements ElementHandler {
             for (int i = 0; i < attributes.getLength(); i++) {
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attributes.getQName(i).toLowerCase());
-                htmlHandler.write(ATTR_VALUE_BEGIN);
+                htmlHandler.write(ATTR_VALUE_EQUAL);
+                htmlHandler.write(getQuotationMark());
                 htmlHandler.write(attributes.getValue(i));
-                htmlHandler.write(ATTR_VALUE_END);
+                htmlHandler.write(getQuotationMark());
             }
             htmlHandler.write(OPEN_TAG_SUFFIX);
         }
@@ -29,5 +35,13 @@ public class DefaultElementHandler implements ElementHandler {
             htmlHandler.write(name.toLowerCase());
             htmlHandler.write(CLOSE_TAG_SUFFIX);
         }
+    }
+
+    public String getQuotationMark() {
+        return quotationMark;
+    }
+
+    public void setQuotationMark(String quotationMark) {
+        this.quotationMark = quotationMark;
     }
 }

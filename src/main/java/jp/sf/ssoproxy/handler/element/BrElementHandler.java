@@ -4,7 +4,7 @@ import jp.sf.ssoproxy.handler.html.HtmlHandler;
 
 import org.xml.sax.Attributes;
 
-public class BrElementHandler implements ElementHandler {
+public class BrElementHandler extends DefaultElementHandler {
     private static final String SLASH = "/";
 
     private boolean endWithSlash;
@@ -25,9 +25,10 @@ public class BrElementHandler implements ElementHandler {
             for (int i = 0; i < attributes.getLength(); i++) {
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attributes.getQName(i).toLowerCase());
-                htmlHandler.write(ATTR_VALUE_BEGIN);
+                htmlHandler.write(ATTR_VALUE_EQUAL);
+                htmlHandler.write(getQuotationMark());
                 htmlHandler.write(attributes.getValue(i));
-                htmlHandler.write(ATTR_VALUE_END);
+                htmlHandler.write(getQuotationMark());
             }
             if (endWithSlash) {
                 htmlHandler.write(SLASH);

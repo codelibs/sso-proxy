@@ -19,7 +19,8 @@ public class BaseElementHandler extends DefaultElementHandler {
                 String attrName = attributes.getQName(i).toLowerCase();
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attrName);
-                htmlHandler.write(ATTR_VALUE_BEGIN);
+                htmlHandler.write(ATTR_VALUE_EQUAL);
+                htmlHandler.write(getQuotationMark());
                 if (ElementHandler.HREF_ATTR.equals(attrName)) {
                     Map<String, Object> props = htmlHandler.getProperties();
                     // store original url
@@ -33,7 +34,7 @@ public class BaseElementHandler extends DefaultElementHandler {
                 } else {
                     htmlHandler.write(attributes.getValue(i));
                 }
-                htmlHandler.write(ATTR_VALUE_END);
+                htmlHandler.write(getQuotationMark());
             }
             htmlHandler.write(OPEN_TAG_SUFFIX);
         }

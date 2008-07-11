@@ -24,14 +24,15 @@ public class MultipleLinkReplacementElementHandler extends
                 String attrName = attributes.getQName(i).toLowerCase();
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attrName);
-                htmlHandler.write(ATTR_VALUE_BEGIN);
+                htmlHandler.write(ATTR_VALUE_EQUAL);
+                htmlHandler.write(getQuotationMark());
                 if (replacedAttrs.contains(attrName)) {
                     htmlHandler.write(ElementHandlerUtil.buildUrl(htmlHandler,
                             attributes.getValue(i)));
                 } else {
                     htmlHandler.write(attributes.getValue(i));
                 }
-                htmlHandler.write(ATTR_VALUE_END);
+                htmlHandler.write(getQuotationMark());
             }
             htmlHandler.write(OPEN_TAG_SUFFIX);
         }

@@ -15,9 +15,9 @@ public interface ElementHandler {
 
     public static final String SPACE = " ";
 
-    public static final String ATTR_VALUE_BEGIN = "=\"";
+    public static final String ATTR_VALUE_EQUAL = "=";
 
-    public static final String ATTR_VALUE_END = "\"";
+    public static final String DEFAULT_QUOTATION_MARK = "\'";
 
     public static final String HREF_ATTR = "href";
 
