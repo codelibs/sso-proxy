@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" "http://www.seasar.org/dtd/components24.dtd">
+<components>
+  <component name="aElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"href"</arg>
+  </component>
+  <component name="appletElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"codebase"</arg>
+  </component>
+  <component name="baseElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.BaseElementHandler" instance="prototype"/>
+  <component name="bodyElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="brElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.DefaultElementHandler" instance="prototype">
+    <property name="skipEndTag">true</property>
+  </component>
+  <component name="buttonElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.DefaultElementHandler" instance="prototype">
+    <property name="quotationMark">"'"</property>
+  </component>
+  <component name="frameElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+<!-- TODO: Post method -->
+  <component name="formElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"action"</arg>
+  </component>
+  <component name="iframeElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="imgElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+    <property name="skipEndTag">true</property>
+  </component>
+  <component name="inputElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+    <property name="skipEndTag">true</property>
+  </component>
+  <component name="linkElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"href"</arg>
+    <property name="skipEndTag">true</property>
+  </component>
+  <component name="scriptElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"src"</arg>
+  </component>
+  <component name="tableElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="tdElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+  <component name="trElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
+    <arg>"background"</arg>
+  </component>
+<!-- Default Element Handler -->
+  <component name="defaultElementHandlerForCybozeOffice7" class="jp.sf.ssoproxy.handler.element.DefaultElementHandler" instance="prototype"/>
+<!-- HtmlHandler -->
+  <component name="cybozeOffice7HtmlHandler" class="jp.sf.ssoproxy.handler.html.HtmlHandler" instance="prototype">
+    <arg>#{
+"aElementHandler":aElementHandlerForCybozeOffice7,
+"appletElementHandler":appletElementHandlerForCybozeOffice7,
+"baseElementHandler":baseElementHandlerForCybozeOffice7,
+"bodyElementHandler":bodyElementHandlerForCybozeOffice7,
+"brElementHandler":brElementHandlerForCybozeOffice7,
+"buttonElementHandler":buttonElementHandlerForCybozeOffice7,
+"frameElementHandler":frameElementHandlerForCybozeOffice7,
+"formElementHandler":formElementHandlerForCybozeOffice7,
+"iframeElementHandler":iframeElementHandlerForCybozeOffice7,
+"imgElementHandler":imgElementHandlerForCybozeOffice7,
+"inputElementHandler":inputElementHandlerForCybozeOffice7,
+"linkElementHandler":linkElementHandlerForCybozeOffice7,
+"scriptElementHandler":scriptElementHandlerForCybozeOffice7,
+"tableElementHandler":tableElementHandlerForCybozeOffice7,
+"tdElementHandler":tdElementHandlerForCybozeOffice7,
+"trElementHandler":trElementHandlerForCybozeOffice7,
+"defaultElementHandler":defaultElementHandlerForCybozeOffice7
+}</arg>
+  </component>
+</components>
