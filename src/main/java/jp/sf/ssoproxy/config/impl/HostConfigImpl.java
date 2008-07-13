@@ -3,11 +3,11 @@ package jp.sf.ssoproxy.config.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.config.HostConfig;
+
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 
 public class HostConfigImpl implements HostConfig {
     private static final String HTTP_SCHEME = "http";

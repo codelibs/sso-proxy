@@ -73,9 +73,9 @@ public class HtmlForwarder implements Forwarder {
     public HtmlForwarder() {
         elementNameCase = NO_CHANGE_CASE_ELEMENT;
         attributeNameCase = NO_CHANGE_CASE_ATTRIBUTE;
-        xmlNotifyCharRefs = true;
-        xmlNotifyBuiltinRefs = true;
-        htmlNotifyBuiltinRefs = true;
+        xmlNotifyCharRefs = false;
+        xmlNotifyBuiltinRefs = false;
+        htmlNotifyBuiltinRefs = false;
         cdataSections = true;
     }
 

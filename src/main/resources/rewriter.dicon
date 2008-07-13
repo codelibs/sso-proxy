@@ -11,7 +11,9 @@
   <component name="bodyElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
     <arg>"background"</arg>
   </component>
-  <component name="brElementHandler" class="jp.sf.ssoproxy.handler.element.BrElementHandler" instance="prototype"/>
+  <component name="brElementHandler" class="jp.sf.ssoproxy.handler.element.DefaultElementHandler" instance="prototype">
+    <property name="skipEndTag">true</property>
+  </component>
   <component name="frameElementHandler" class="jp.sf.ssoproxy.handler.element.SingleLinkReplacementElementHandler" instance="prototype">
     <arg>"src"</arg>
   </component>

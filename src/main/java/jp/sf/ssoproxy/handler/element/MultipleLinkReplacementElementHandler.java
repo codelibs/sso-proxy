@@ -34,6 +34,9 @@ public class MultipleLinkReplacementElementHandler extends
                 }
                 htmlHandler.write(getQuotationMark());
             }
+            if (isEndWithSlash()) {
+                htmlHandler.write(SLASH);
+            }
             htmlHandler.write(OPEN_TAG_SUFFIX);
         }
     }

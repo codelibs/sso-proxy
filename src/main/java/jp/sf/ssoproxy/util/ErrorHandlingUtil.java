@@ -8,12 +8,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import jp.sf.ssoproxy.SSOProxyConstraints;
 import jp.sf.ssoproxy.SSOProxyException;
 import jp.sf.ssoproxy.servlet.ProxyServlet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ErrorHandlingUtil {
 

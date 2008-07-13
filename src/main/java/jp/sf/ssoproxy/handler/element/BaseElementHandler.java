@@ -36,6 +36,9 @@ public class BaseElementHandler extends DefaultElementHandler {
                 }
                 htmlHandler.write(getQuotationMark());
             }
+            if (isEndWithSlash()) {
+                htmlHandler.write(SLASH);
+            }
             htmlHandler.write(OPEN_TAG_SUFFIX);
         }
     }

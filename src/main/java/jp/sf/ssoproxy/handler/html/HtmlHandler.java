@@ -20,8 +20,6 @@ public class HtmlHandler extends DefaultHandler {
 
     private static final String DEFAULT_ELEMENT_HANDLER = "defaultElementHandler";
 
-    private String hostConfigName;
-
     private boolean writable;
 
     private Writer writer;
@@ -33,20 +31,10 @@ public class HtmlHandler extends DefaultHandler {
     private ElementHandler defaultElementHander;
 
     public HtmlHandler() {
-        this(null, new HashMap<String, Object>());
+        this(new HashMap<String, Object>());
     }
 
     public HtmlHandler(Map<String, Object> elementHanlders) {
-        this(null, elementHanlders);
-    }
-
-    public HtmlHandler(String hostConfigName) {
-        this(hostConfigName, new HashMap<String, Object>());
-    }
-
-    public HtmlHandler(String hostConfigName,
-            Map<String, Object> elementHanlders) {
-        this.hostConfigName = hostConfigName;
         writable = true;
         writer = null;
         properties = new HashMap<String, Object>();
@@ -124,11 +112,6 @@ public class HtmlHandler extends DefaultHandler {
     protected ElementHandler getElementHandler(String name) {
         StringBuilder handlerName = new StringBuilder(name);
         handlerName.append(ELEMENT_HANDLER);
-        if (hostConfigName != null) {
-            handlerName.append(KEY_SEPARATOR);
-            handlerName.append(hostConfigName);
-        }
-
         ElementHandler elementHandler = (ElementHandler) getElementHanlders()
                 .get(handlerName.toString());
         if (elementHandler != null) {
@@ -200,11 +183,4 @@ public class HtmlHandler extends DefaultHandler {
         this.elementHanlders = elementHanlders;
     }
 
-    public String getHostConfigName() {
-        return hostConfigName;
-    }
-
-    public void setHostConfigName(String key) {
-        this.hostConfigName = key;
-    }
 }
