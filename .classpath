@@ -16,6 +16,7 @@
   <classpathentry kind="var" path="M2_REPO/org/seasar/container/s2-tiger/2.4.25/s2-tiger-2.4.25.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/seasar/container/s2-extension/2.4.25/s2-extension-2.4.25.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/poi/poi/3.0-FINAL/poi-3.0-FINAL.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-fileupload/commons-fileupload/1.2.1/commons-fileupload-1.2.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.2/commons-codec-1.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/1.4/commons-io-1.4.jar"/>

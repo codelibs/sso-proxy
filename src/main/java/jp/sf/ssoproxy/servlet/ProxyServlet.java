@@ -1,5 +1,6 @@
 package jp.sf.ssoproxy.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -11,13 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.access.AccessManager;
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.HostConfig;
 import jp.sf.ssoproxy.config.ProxyConfig;
 import jp.sf.ssoproxy.util.ErrorHandlingUtil;
 
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -31,17 +34,19 @@ public class ProxyServlet extends HttpServlet {
 
     private Locale systemLocale;
 
+    private ServletFileUpload servletFileUpload;
+
     @Override
     public void init() throws ServletException {
         // set an error page
         errorPage = getServletConfig().getInitParameter(
-                SSOProxyConstraints.ERROR_JSP_KEY);
+                SSOProxyConstants.ERROR_JSP_KEY);
         if (errorPage == null) {
-            errorPage = SSOProxyConstraints.DEFAULT_ERROR_JSP;
+            errorPage = SSOProxyConstants.DEFAULT_ERROR_JSP;
         }
         // set a system locale
         String value = getServletConfig().getInitParameter(
-                SSOProxyConstraints.SYSTEM_LOCALE_KEY);
+                SSOProxyConstants.SYSTEM_LOCALE_KEY);
         if (value != null) {
             try {
                 String[] values = value.split("_");
@@ -60,6 +65,25 @@ public class ProxyServlet extends HttpServlet {
         } else {
             systemLocale = Locale.ENGLISH;
         }
+
+        // Create a factory for disk-based file items
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+
+        // Set factory constraints
+        String sizeThreshold = getServletConfig().getInitParameter(
+                "uploadSizeThreshold");
+        if (sizeThreshold != null) {
+            factory.setSizeThreshold(Integer.parseInt(sizeThreshold));
+        }
+        String repositoryPath = getServletConfig().getInitParameter(
+                "uploadRepositoryPath");
+        if (repositoryPath != null) {
+            factory.setRepository(new File(repositoryPath));
+        }
+
+        // Create a new file upload handler
+        servletFileUpload = new ServletFileUpload(factory);
+
     }
 
     @Override
@@ -130,38 +154,46 @@ public class ProxyServlet extends HttpServlet {
             return;
         }
 
+        // Check that we have a file upload request
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+
         Map<String, Object> resultMap = null;
         try {
             String url = hostConfig.buildUrl(pathInfo.substring(actualPathPos));
-            // TODO the url has request parameters or not when checking it in a following method...
-            AuthConfig authConfig = hostConfig.getAuthConfig(request
-                    .getMethod(), url, request.getParameterMap());
+            if (isMultipart) {
 
-            //  check a login page
-            if (authConfig != null) {
-                // Check a login page
-                resultMap = accessManager.sendLoginPageRequest(request,
-                        hostConfig, authConfig);
-                int statusCode = ((Integer) resultMap
-                        .get(SSOProxyConstraints.STATUS_CODE_PARAM)).intValue();
-                if (statusCode == 200
-                        && authConfig
-                                .checkLoginPage((InputStream) resultMap
-                                        .get(SSOProxyConstraints.LOGIN_BODY_INPUT_STREAM_PARAM))) {
-                    // release result
-                    accessManager.release(resultMap);
-                    // Send auth info
-                    resultMap = accessManager.sendAuthPageRequest(request,
-                            hostConfig, authConfig);
-                }
             } else {
-                // get a content from a back-end server
-                resultMap = accessManager.sendRequest(request, hostConfig, url,
-                        hostConfig.getEncoding());
+                // TODO the url has request parameters or not when checking it in a following method...
+                AuthConfig authConfig = hostConfig.getAuthConfig(request
+                        .getMethod(), url, request.getParameterMap());
+
+                //  check a login page
+                if (authConfig != null) {
+                    // Check a login page
+                    resultMap = accessManager.sendLoginPageRequest(request,
+                            hostConfig, authConfig);
+                    int statusCode = ((Integer) resultMap
+                            .get(SSOProxyConstants.STATUS_CODE_PARAM))
+                            .intValue();
+                    if (statusCode == 200
+                            && authConfig
+                                    .checkLoginPage((InputStream) resultMap
+                                            .get(SSOProxyConstants.LOGIN_BODY_INPUT_STREAM_PARAM))) {
+                        // release result
+                        accessManager.release(resultMap);
+                        // Send auth info
+                        resultMap = accessManager.sendAuthPageRequest(request,
+                                hostConfig, authConfig);
+                    }
+                } else {
+                    // get a content from a back-end server
+                    resultMap = accessManager.sendRequest(request, hostConfig,
+                            url, hostConfig.getEncoding());
+                }
             }
 
             int statusCode = ((Integer) resultMap
-                    .get(SSOProxyConstraints.STATUS_CODE_PARAM)).intValue();
+                    .get(SSOProxyConstants.STATUS_CODE_PARAM)).intValue();
             // redirect
             if (isRedirectStatusCode(statusCode)) {
                 accessManager.redirectResponse(request, response, resultMap,
@@ -178,7 +210,7 @@ public class ProxyServlet extends HttpServlet {
             accessManager.sendResponse(request, response, resultMap,
                     proxyConfig, hostConfigName, hostConfig
                             .getForwarderName((String) resultMap
-                                    .get(SSOProxyConstraints.MIME_TYPE_PARAM)));
+                                    .get(SSOProxyConstants.MIME_TYPE_PARAM)));
             // flush
             response.flushBuffer();
         } catch (Exception e) {

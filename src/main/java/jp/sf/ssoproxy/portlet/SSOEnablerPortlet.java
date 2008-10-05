@@ -8,7 +8,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 
 public class SSOEnablerPortlet extends GenericPortlet {
 
@@ -17,7 +17,7 @@ public class SSOEnablerPortlet extends GenericPortlet {
         String remoteUser = request.getRemoteUser();
         if (remoteUser != null) {
             request.getPortletSession().setAttribute(
-                    SSOProxyConstraints.CURRENT_REMOTE_USER, remoteUser,
+                    SSOProxyConstants.CURRENT_REMOTE_USER, remoteUser,
                     PortletSession.APPLICATION_SCOPE);
         }
     }

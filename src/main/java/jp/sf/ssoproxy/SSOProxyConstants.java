@@ -1,7 +1,14 @@
 package jp.sf.ssoproxy;
 
-public class SSOProxyConstraints {
+import jp.sf.ssoproxy.cookie.StandardBrowserSpec;
+
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+
+public class SSOProxyConstants {
+
     public static final String PREFIX = "ssoproxy.";
+
+    public static final String STANDARD_BROWSER = "browser";
 
     public static final String STORED_COOKIE_LIST = PREFIX
             + "StoredCookieList_";
@@ -62,4 +69,8 @@ public class SSOProxyConstraints {
 
     public static final String CURRENT_REMOTE_USER_KEY = "currentUserKey";
 
+    static {
+        CookiePolicy.registerCookieSpec(STANDARD_BROWSER,
+                StandardBrowserSpec.class);
+    }
 }

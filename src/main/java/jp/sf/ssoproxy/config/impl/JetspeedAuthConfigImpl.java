@@ -4,7 +4,7 @@ import java.util.prefs.Preferences;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.util.JetspeedUtil;
 
@@ -27,7 +27,7 @@ public class JetspeedAuthConfigImpl extends AbstractAuthConfig {
         if (usernameKey.equals(value)) {
             // from user attribute
             String remoteUser = (String) request.getSession().getAttribute(
-                    SSOProxyConstraints.CURRENT_REMOTE_USER);
+                    SSOProxyConstants.CURRENT_REMOTE_USER);
             if (remoteUser == null) {
                 // error    
                 throw new ConfigException("000009");
@@ -45,7 +45,7 @@ public class JetspeedAuthConfigImpl extends AbstractAuthConfig {
         } else if (passwordKey.equals(value)) {
             // from user attribute
             String remoteUser = (String) request.getSession().getAttribute(
-                    SSOProxyConstraints.CURRENT_REMOTE_USER);
+                    SSOProxyConstants.CURRENT_REMOTE_USER);
             if (remoteUser == null) {
                 // error    
                 throw new ConfigException("000011");

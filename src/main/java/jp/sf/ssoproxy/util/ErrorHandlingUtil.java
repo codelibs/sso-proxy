@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.SSOProxyException;
 import jp.sf.ssoproxy.servlet.ProxyServlet;
 
@@ -45,8 +45,8 @@ public class ErrorHandlingUtil {
         // TODO response status code
         response.setStatus(500);
 
-        request.setAttribute(SSOProxyConstraints.ERROR_CODE, errorCode);
-        request.setAttribute(SSOProxyConstraints.ERROR_MESSAGE, errorMessage);
+        request.setAttribute(SSOProxyConstants.ERROR_CODE, errorCode);
+        request.setAttribute(SSOProxyConstants.ERROR_MESSAGE, errorMessage);
 
         RequestDispatcher rd = request.getRequestDispatcher(errorPage);
         rd.forward(request, response);
