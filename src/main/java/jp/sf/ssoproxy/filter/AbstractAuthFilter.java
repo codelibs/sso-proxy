@@ -12,7 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.util.ErrorHandlingUtil;
 
 public abstract class AbstractAuthFilter implements Filter {
@@ -26,20 +26,20 @@ public abstract class AbstractAuthFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         // set an current user key
         currentUserKey = config
-                .getInitParameter(SSOProxyConstraints.CURRENT_REMOTE_USER_KEY);
+                .getInitParameter(SSOProxyConstants.CURRENT_REMOTE_USER_KEY);
         if (currentUserKey == null) {
-            currentUserKey = SSOProxyConstraints.CURRENT_REMOTE_USER;
+            currentUserKey = SSOProxyConstants.CURRENT_REMOTE_USER;
         }
 
         // set an error page
-        errorPage = config.getInitParameter(SSOProxyConstraints.ERROR_JSP_KEY);
+        errorPage = config.getInitParameter(SSOProxyConstants.ERROR_JSP_KEY);
         if (errorPage == null) {
-            errorPage = SSOProxyConstraints.DEFAULT_ERROR_JSP;
+            errorPage = SSOProxyConstants.DEFAULT_ERROR_JSP;
         }
 
         // set a system locale
         String value = config
-                .getInitParameter(SSOProxyConstraints.SYSTEM_LOCALE_KEY);
+                .getInitParameter(SSOProxyConstants.SYSTEM_LOCALE_KEY);
         if (value != null) {
             try {
                 String[] values = value.split("_");

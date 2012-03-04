@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.SSOProxyException;
 import jp.sf.ssoproxy.forwarder.Forwarder;
 import jp.sf.ssoproxy.forwarder.ForwarderException;
@@ -88,16 +88,16 @@ public class HtmlForwarder implements Forwarder {
                 getHtmlHandlerName());
 
         String inputEncoding = (String) props
-                .get(SSOProxyConstraints.INPUT_ENCODING_PARAM);
+                .get(SSOProxyConstants.INPUT_ENCODING_PARAM);
         if (inputEncoding == null) {
             inputEncoding = DEFAULT_INPUT_ENCODING;
         }
 
         // set properties
-        htmlHandler.getProperties().put(SSOProxyConstraints.URL_PARAM,
-                props.get(SSOProxyConstraints.URL_PARAM));
-        htmlHandler.getProperties().put(SSOProxyConstraints.PROXY_CONFIG_PARAM,
-                props.get(SSOProxyConstraints.PROXY_CONFIG_PARAM));
+        htmlHandler.getProperties().put(SSOProxyConstants.URL_PARAM,
+                props.get(SSOProxyConstants.URL_PARAM));
+        htmlHandler.getProperties().put(SSOProxyConstants.PROXY_CONFIG_PARAM,
+                props.get(SSOProxyConstants.PROXY_CONFIG_PARAM));
 
         InputSource inputSource = new InputSource(is);
         inputSource.setEncoding(inputEncoding);
@@ -124,7 +124,7 @@ public class HtmlForwarder implements Forwarder {
             parser.parse(inputSource);
 
             String encoding = (String) props
-                    .get(SSOProxyConstraints.OUTPUT_ENCODING_PARAM);
+                    .get(SSOProxyConstants.OUTPUT_ENCODING_PARAM);
             if (encoding == null) {
                 //                encoding = DEFAULT_OUTPUT_ENCODING;
                 encoding = inputEncoding;
@@ -143,7 +143,7 @@ public class HtmlForwarder implements Forwarder {
             // } catch (IOException e) {
             // error
             throw new ForwarderException("000006", new Object[] { props
-                    .get(SSOProxyConstraints.URL_PARAM) }, e);
+                    .get(SSOProxyConstants.URL_PARAM) }, e);
         }
     }
 

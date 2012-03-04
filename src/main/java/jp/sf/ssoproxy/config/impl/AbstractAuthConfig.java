@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.util.UrlBuilderUtil;
@@ -94,15 +94,15 @@ public abstract class AbstractAuthConfig implements AuthConfig {
      */
     public HttpMethod buildLoginHttpMethod(HttpServletRequest request)
             throws ConfigException {
-        if (SSOProxyConstraints.POST_METHOD.equals(loginPageMethod)) {
+        if (SSOProxyConstants.POST_METHOD.equals(loginPageMethod)) {
             return UrlBuilderUtil.buildPostMethod(loginPageUrl,
-                    getParameterMap(request, SSOProxyConstraints.GET_METHOD,
+                    getParameterMap(request, SSOProxyConstants.GET_METHOD,
                             loginPageDataList),
-                    getParameterMap(request, SSOProxyConstraints.POST_METHOD,
+                    getParameterMap(request, SSOProxyConstants.POST_METHOD,
                             loginPageDataList), loginPageEncoding);
-        } else if (SSOProxyConstraints.GET_METHOD.equals(loginPageMethod)) {
+        } else if (SSOProxyConstants.GET_METHOD.equals(loginPageMethod)) {
             return UrlBuilderUtil.buildGetMethod(loginPageUrl,
-                    getParameterMap(request, SSOProxyConstraints.GET_METHOD,
+                    getParameterMap(request, SSOProxyConstants.GET_METHOD,
                             loginPageDataList), loginPageEncoding);
         }
         // error
@@ -114,14 +114,14 @@ public abstract class AbstractAuthConfig implements AuthConfig {
      */
     public HttpMethod buildAuthHttpMethod(HttpServletRequest request)
             throws ConfigException {
-        if (SSOProxyConstraints.POST_METHOD.equals(authPageMethod)) {
+        if (SSOProxyConstants.POST_METHOD.equals(authPageMethod)) {
             return UrlBuilderUtil.buildPostMethod(authPageUrl, getParameterMap(
-                    request, SSOProxyConstraints.GET_METHOD, authPageDataList),
-                    getParameterMap(request, SSOProxyConstraints.POST_METHOD,
+                    request, SSOProxyConstants.GET_METHOD, authPageDataList),
+                    getParameterMap(request, SSOProxyConstants.POST_METHOD,
                             authPageDataList), authPageEncoding);
-        } else if (SSOProxyConstraints.GET_METHOD.equals(authPageMethod)) {
+        } else if (SSOProxyConstants.GET_METHOD.equals(authPageMethod)) {
             return UrlBuilderUtil.buildGetMethod(authPageUrl, getParameterMap(
-                    request, SSOProxyConstraints.GET_METHOD, authPageDataList),
+                    request, SSOProxyConstants.GET_METHOD, authPageDataList),
                     authPageEncoding);
         }
         // error

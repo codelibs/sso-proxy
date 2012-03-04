@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -26,7 +26,7 @@ public class UrlBuilderUtil {
         }
 
         boolean alreadyAdded = false;
-        if (url.indexOf(SSOProxyConstraints.REQUEST_PARAM_URL_SEPARATOR) >= 0) {
+        if (url.indexOf(SSOProxyConstants.REQUEST_PARAM_URL_SEPARATOR) >= 0) {
             alreadyAdded = true;
         }
 
@@ -38,14 +38,14 @@ public class UrlBuilderUtil {
             for (int i = 0; i < value.length; i++) {
                 if (alreadyAdded) {
                     query
-                            .append(SSOProxyConstraints.REQUEST_PARAM_QUERY_SEPARATOR);
+                            .append(SSOProxyConstants.REQUEST_PARAM_QUERY_SEPARATOR);
                 } else {
                     query
-                            .append(SSOProxyConstraints.REQUEST_PARAM_URL_SEPARATOR);
+                            .append(SSOProxyConstants.REQUEST_PARAM_URL_SEPARATOR);
                     alreadyAdded = true;
                 }
                 query.append(encode(key, encoding));
-                query.append(SSOProxyConstraints.REQUEST_PARAM_EQUAL);
+                query.append(SSOProxyConstants.REQUEST_PARAM_EQUAL);
                 query.append(encode(value[i], encoding));
             }
         }

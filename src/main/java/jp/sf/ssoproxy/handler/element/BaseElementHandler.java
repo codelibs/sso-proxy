@@ -2,7 +2,7 @@ package jp.sf.ssoproxy.handler.element;
 
 import java.util.Map;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.handler.html.HtmlHandler;
 import jp.sf.ssoproxy.util.ElementHandlerUtil;
 
@@ -24,11 +24,11 @@ public class BaseElementHandler extends DefaultElementHandler {
                 if (ElementHandler.HREF_ATTR.equals(attrName)) {
                     Map<String, Object> props = htmlHandler.getProperties();
                     // store original url
-                    props.put(SSOProxyConstraints.ORIGINAL_URL_PARAM, props
-                            .get(SSOProxyConstraints.URL_PARAM));
+                    props.put(SSOProxyConstants.ORIGINAL_URL_PARAM, props
+                            .get(SSOProxyConstants.URL_PARAM));
                     // replace current url
                     String url = attributes.getValue(i);
-                    props.put(SSOProxyConstraints.URL_PARAM, url);
+                    props.put(SSOProxyConstants.URL_PARAM, url);
                     htmlHandler.write(ElementHandlerUtil.buildUrl(htmlHandler,
                             url));
                 } else {

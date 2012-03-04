@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import jp.sf.ssoproxy.SSOProxyConstraints;
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.access.AccessException;
 import jp.sf.ssoproxy.access.AccessManager;
 import jp.sf.ssoproxy.access.ResponseHeader;
@@ -133,21 +133,21 @@ public class AccessManagerImpl implements AccessManager {
 
         File responseBodyFile = File.createTempFile(RESPONSE_BODY_FILE_PREFIX,
                 TEMP_FILE_SUFFIX);
-        resultMap.put(SSOProxyConstraints.RESPONSE_BODY_FILE_PARAM,
+        resultMap.put(SSOProxyConstants.RESPONSE_BODY_FILE_PARAM,
                 responseBodyFile);
 
         DeferredFileOutputStream dfos = new DeferredFileOutputStream(
                 getDownloadThreshold(), responseBodyFile);
         IOUtils.copy(inputStream, dfos);
         if (!dfos.isThresholdExceeded()) {
-            resultMap.put(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM,
+            resultMap.put(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM,
                     new ByteArrayInputStream(dfos.getData()));
             return;
         }
         dfos.flush();
         IOUtils.closeQuietly(dfos);
 
-        resultMap.put(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM,
+        resultMap.put(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM,
                 new FileInputStream(responseBodyFile));
     }
 
@@ -159,29 +159,29 @@ public class AccessManagerImpl implements AccessManager {
 
         File responseBodyFile = File.createTempFile(RESPONSE_BODY_FILE_PREFIX,
                 TEMP_FILE_SUFFIX);
-        resultMap.put(SSOProxyConstraints.RESPONSE_BODY_FILE_PARAM,
+        resultMap.put(SSOProxyConstants.RESPONSE_BODY_FILE_PARAM,
                 responseBodyFile);
 
         File loginBodyFile = File.createTempFile(LOGIN_BODY_FILE_PREFIX,
                 TEMP_FILE_SUFFIX);
-        resultMap.put(SSOProxyConstraints.LOGIN_BODY_FILE_PARAM, loginBodyFile);
+        resultMap.put(SSOProxyConstants.LOGIN_BODY_FILE_PARAM, loginBodyFile);
 
         DeferredFileOutputStream dfos = new DeferredFileOutputStream(
                 getDownloadThreshold(), responseBodyFile);
         IOUtils.copy(inputStream, dfos);
         if (!dfos.isThresholdExceeded()) {
-            resultMap.put(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM,
+            resultMap.put(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM,
                     new ByteArrayInputStream(dfos.getData()));
-            resultMap.put(SSOProxyConstraints.LOGIN_BODY_INPUT_STREAM_PARAM,
+            resultMap.put(SSOProxyConstants.LOGIN_BODY_INPUT_STREAM_PARAM,
                     new ByteArrayInputStream(dfos.getData()));
             return;
         }
         dfos.flush();
         IOUtils.closeQuietly(dfos);
 
-        resultMap.put(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM,
+        resultMap.put(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM,
                 new FileInputStream(responseBodyFile));
-        resultMap.put(SSOProxyConstraints.LOGIN_BODY_INPUT_STREAM_PARAM,
+        resultMap.put(SSOProxyConstants.LOGIN_BODY_INPUT_STREAM_PARAM,
                 new FileInputStream(loginBodyFile));
     }
 
@@ -189,13 +189,13 @@ public class AccessManagerImpl implements AccessManager {
             int result) throws IOException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        resultMap.put(SSOProxyConstraints.STATUS_CODE_PARAM, result);
+        resultMap.put(SSOProxyConstants.STATUS_CODE_PARAM, result);
         Header[] responseHeaders = httpMethod.getResponseHeaders();
         List<ResponseHeader> responseHeaderList = new ArrayList<ResponseHeader>();
         for (int i = 0; i < responseHeaders.length; i++) {
             responseHeaderList.add(new ResponseHeader(responseHeaders[i]));
         }
-        resultMap.put(SSOProxyConstraints.RESPONSE_HEADERS_PARAM,
+        resultMap.put(SSOProxyConstants.RESPONSE_HEADERS_PARAM,
                 responseHeaderList);
         // TODO response footer?
         // content type
@@ -221,14 +221,14 @@ public class AccessManagerImpl implements AccessManager {
         if (mimeType == null) {
             mimeType = DEFAULT_CONTENT_TYPE;
         }
-        resultMap.put(SSOProxyConstraints.MIME_TYPE_PARAM, mimeType);
-        resultMap.put(SSOProxyConstraints.URL_PARAM, url);
-        resultMap.put(SSOProxyConstraints.CONTENT_TYPE_ENCODING_PARAM,
+        resultMap.put(SSOProxyConstants.MIME_TYPE_PARAM, mimeType);
+        resultMap.put(SSOProxyConstants.URL_PARAM, url);
+        resultMap.put(SSOProxyConstants.CONTENT_TYPE_ENCODING_PARAM,
                 inputEncoding);
         if (inputEncoding == null) {
             inputEncoding = httpMethod.getParams().getContentCharset();
         }
-        resultMap.put(SSOProxyConstraints.INPUT_ENCODING_PARAM, inputEncoding);
+        resultMap.put(SSOProxyConstants.INPUT_ENCODING_PARAM, inputEncoding);
 
         return resultMap;
     }
@@ -242,17 +242,17 @@ public class AccessManagerImpl implements AccessManager {
 
         HttpClient httpclient = getHttpClient(hostConfig);
 
-        String cookieMapName = SSOProxyConstraints.STORED_COOKIE_LIST
+        String cookieMapName = SSOProxyConstants.STORED_COOKIE_LIST
                 + hostConfig.getName();
 
         HttpSession httpSession = request.getSession();
         setCookiesToServer(httpSession, cookieMapName, httpclient);
 
         HttpMethod httpMethod = null;
-        if (SSOProxyConstraints.GET_METHOD.equals(request.getMethod())) {
+        if (SSOProxyConstants.GET_METHOD.equals(request.getMethod())) {
             httpMethod = UrlBuilderUtil.buildGetMethod(url, request
                     .getParameterMap(), encoding);
-        } else if (SSOProxyConstraints.POST_METHOD.equals(request.getMethod())) {
+        } else if (SSOProxyConstants.POST_METHOD.equals(request.getMethod())) {
             httpMethod = UrlBuilderUtil.buildPostMethod(url, request
                     .getParameterMap(), encoding);
         } else {
@@ -292,7 +292,7 @@ public class AccessManagerImpl implements AccessManager {
 
         HttpClient httpclient = getHttpClient(hostConfig);
 
-        String cookieListName = SSOProxyConstraints.STORED_COOKIE_LIST
+        String cookieListName = SSOProxyConstants.STORED_COOKIE_LIST
                 + hostConfig.getName();
 
         HttpSession httpSession = request.getSession();
@@ -338,7 +338,7 @@ public class AccessManagerImpl implements AccessManager {
 
         HttpClient httpclient = getHttpClient(hostConfig);
 
-        String cookieMapName = SSOProxyConstraints.STORED_COOKIE_LIST
+        String cookieMapName = SSOProxyConstants.STORED_COOKIE_LIST
                 + hostConfig.getName();
 
         HttpSession httpSession = request.getSession();
@@ -386,9 +386,9 @@ public class AccessManagerImpl implements AccessManager {
             throws AccessException {
         // content type
         String mimeType = (String) resultMap
-                .get(SSOProxyConstraints.MIME_TYPE_PARAM);
+                .get(SSOProxyConstants.MIME_TYPE_PARAM);
         String contentTypeEncoding = (String) resultMap
-                .get(SSOProxyConstraints.CONTENT_TYPE_ENCODING_PARAM);
+                .get(SSOProxyConstants.CONTENT_TYPE_ENCODING_PARAM);
         StringBuilder contentType = new StringBuilder(mimeType);
         if (contentTypeEncoding != null) {
             contentType.append("; charset=").append(contentTypeEncoding);
@@ -397,7 +397,7 @@ public class AccessManagerImpl implements AccessManager {
 
         // headers
         List<ResponseHeader> responseHeaderList = (List<ResponseHeader>) resultMap
-                .get(SSOProxyConstraints.RESPONSE_HEADERS_PARAM);
+                .get(SSOProxyConstants.RESPONSE_HEADERS_PARAM);
         for (ResponseHeader responseHeader : responseHeaderList) {
             if (SET_COOKIE_HEADER.equals(responseHeader.getName())
                     || SET_COOKIE2_HEADER.equals(responseHeader.getName())) {
@@ -421,18 +421,18 @@ public class AccessManagerImpl implements AccessManager {
         }
 
         Map<String, Object> props = new HashMap<String, Object>();
-        props.put(SSOProxyConstraints.URL_PARAM, resultMap
-                .get(SSOProxyConstraints.URL_PARAM));
-        props.put(SSOProxyConstraints.INPUT_ENCODING_PARAM, resultMap
-                .get(SSOProxyConstraints.INPUT_ENCODING_PARAM));
-        props.put(SSOProxyConstraints.OUTPUT_ENCODING_PARAM, resultMap
-                .get(SSOProxyConstraints.OUTPUT_ENCODING_PARAM));
-        props.put(SSOProxyConstraints.PROXY_CONFIG_PARAM, proxyConfig);
+        props.put(SSOProxyConstants.URL_PARAM, resultMap
+                .get(SSOProxyConstants.URL_PARAM));
+        props.put(SSOProxyConstants.INPUT_ENCODING_PARAM, resultMap
+                .get(SSOProxyConstants.INPUT_ENCODING_PARAM));
+        props.put(SSOProxyConstants.OUTPUT_ENCODING_PARAM, resultMap
+                .get(SSOProxyConstants.OUTPUT_ENCODING_PARAM));
+        props.put(SSOProxyConstants.PROXY_CONFIG_PARAM, proxyConfig);
         //        props.put(SSOProxyConstraints.REQUEST_PARAM, request);
         //        props.put(SSOProxyConstraints.RESPONSE_PARAM, response);
 
         InputStream inputStream = (InputStream) resultMap
-                .get(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM);
+                .get(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM);
         try {
             if (inputStream != null) {
                 forwarder.forward(props, inputStream, response
@@ -454,13 +454,13 @@ public class AccessManagerImpl implements AccessManager {
         String redirectLocation;
         redirectLocation = getResponseHeaderValue(
                 (List<ResponseHeader>) resultMap
-                        .get(SSOProxyConstraints.RESPONSE_HEADERS_PARAM),
+                        .get(SSOProxyConstants.RESPONSE_HEADERS_PARAM),
                 LOCATION_HEADER);
         if (redirectLocation != null) {
             // TODO headers
             try {
                 response.setStatus((Integer) resultMap
-                        .get(SSOProxyConstraints.STATUS_CODE_PARAM));
+                        .get(SSOProxyConstants.STATUS_CODE_PARAM));
                 response.sendRedirect(proxyConfig
                         .buildProxyUrl(redirectLocation));
             } catch (IOException e) {
@@ -490,25 +490,25 @@ public class AccessManagerImpl implements AccessManager {
         }
 
         InputStream responseBodyInputStream = (InputStream) resultMap
-                .get(SSOProxyConstraints.RESPONSE_BODY_INPUT_STREAM_PARAM);
+                .get(SSOProxyConstants.RESPONSE_BODY_INPUT_STREAM_PARAM);
         if (responseBodyInputStream != null) {
             IOUtils.closeQuietly(responseBodyInputStream);
         }
 
         File responseBodyFile = (File) resultMap
-                .get(SSOProxyConstraints.RESPONSE_BODY_FILE_PARAM);
+                .get(SSOProxyConstants.RESPONSE_BODY_FILE_PARAM);
         if (responseBodyFile != null) {
             FileUtils.deleteQuietly(responseBodyFile);
         }
 
         InputStream loginBodyInputStream = (InputStream) resultMap
-                .get(SSOProxyConstraints.LOGIN_BODY_INPUT_STREAM_PARAM);
+                .get(SSOProxyConstants.LOGIN_BODY_INPUT_STREAM_PARAM);
         if (loginBodyInputStream != null) {
             IOUtils.closeQuietly(loginBodyInputStream);
         }
 
         File loginBodyFile = (File) resultMap
-                .get(SSOProxyConstraints.LOGIN_BODY_FILE_PARAM);
+                .get(SSOProxyConstants.LOGIN_BODY_FILE_PARAM);
         if (loginBodyFile != null) {
             FileUtils.deleteQuietly(loginBodyFile);
         }

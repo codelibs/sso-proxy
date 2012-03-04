@@ -3,6 +3,7 @@ package jp.sf.ssoproxy.config.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.sf.ssoproxy.SSOProxyConstants;
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.ConfigException;
 import jp.sf.ssoproxy.config.HostConfig;
@@ -49,7 +50,7 @@ public class HostConfigImpl implements HostConfig {
         encoding = UTF_8;
         accessManagerName = DEFAULT_ACCESS_MANAGER;
         forwarderMap = new HashMap<String, String>();
-        cookiePolicy = CookiePolicy.BROWSER_COMPATIBILITY;
+        cookiePolicy = SSOProxyConstants.STANDARD_BROWSER;
         singleCookieHeader = false;
         connectionTimeout = 30000;
     }
