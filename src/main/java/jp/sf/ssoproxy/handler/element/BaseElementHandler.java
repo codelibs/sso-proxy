@@ -10,24 +10,27 @@ import org.xml.sax.Attributes;
 
 public class BaseElementHandler extends DefaultElementHandler {
 
-    public void startElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name, Attributes attributes) {
+    @Override
+    public void startElement(final HtmlHandler htmlHandler, final String uri,
+            final String localName, final String name,
+            final Attributes attributes) {
         if (htmlHandler.isWritable()) {
             htmlHandler.write(OPEN_TAG_PREFIX);
             htmlHandler.write(name.toLowerCase());
             for (int i = 0; i < attributes.getLength(); i++) {
-                String attrName = attributes.getQName(i).toLowerCase();
+                final String attrName = attributes.getQName(i).toLowerCase();
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attrName);
                 htmlHandler.write(ATTR_VALUE_EQUAL);
                 htmlHandler.write(getQuotationMark());
                 if (ElementHandler.HREF_ATTR.equals(attrName)) {
-                    Map<String, Object> props = htmlHandler.getProperties();
+                    final Map<String, Object> props = htmlHandler
+                            .getProperties();
                     // store original url
-                    props.put(SSOProxyConstants.ORIGINAL_URL_PARAM, props
-                            .get(SSOProxyConstants.URL_PARAM));
+                    props.put(SSOProxyConstants.ORIGINAL_URL_PARAM,
+                            props.get(SSOProxyConstants.URL_PARAM));
                     // replace current url
-                    String url = attributes.getValue(i);
+                    final String url = attributes.getValue(i);
                     props.put(SSOProxyConstants.URL_PARAM, url);
                     htmlHandler.write(ElementHandlerUtil.buildUrl(htmlHandler,
                             url));

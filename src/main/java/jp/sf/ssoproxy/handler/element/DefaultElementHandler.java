@@ -19,8 +19,10 @@ public class DefaultElementHandler implements ElementHandler {
         endWithSlash = false;
     }
 
-    public void startElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name, Attributes attributes) {
+    @Override
+    public void startElement(final HtmlHandler htmlHandler, final String uri,
+            final String localName, final String name,
+            final Attributes attributes) {
         if (htmlHandler.isWritable()) {
             htmlHandler.write(OPEN_TAG_PREFIX);
             htmlHandler.write(name.toLowerCase());
@@ -39,8 +41,9 @@ public class DefaultElementHandler implements ElementHandler {
         }
     }
 
-    public void endElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name) {
+    @Override
+    public void endElement(final HtmlHandler htmlHandler, final String uri,
+            final String localName, final String name) {
         if (!skipEndTag && htmlHandler.isWritable()) {
             htmlHandler.write(CLOSE_TAG_PREFIX);
             htmlHandler.write(name.toLowerCase());
@@ -52,7 +55,7 @@ public class DefaultElementHandler implements ElementHandler {
         return quotationMark;
     }
 
-    public void setQuotationMark(String quotationMark) {
+    public void setQuotationMark(final String quotationMark) {
         this.quotationMark = quotationMark;
     }
 
@@ -60,7 +63,7 @@ public class DefaultElementHandler implements ElementHandler {
         return skipEndTag;
     }
 
-    public void setSkipEndTag(boolean skipEndTag) {
+    public void setSkipEndTag(final boolean skipEndTag) {
         this.skipEndTag = skipEndTag;
     }
 
@@ -68,7 +71,7 @@ public class DefaultElementHandler implements ElementHandler {
         return endWithSlash;
     }
 
-    public void setEndWithSlash(boolean endWithSlash) {
+    public void setEndWithSlash(final boolean endWithSlash) {
         this.endWithSlash = endWithSlash;
     }
 }

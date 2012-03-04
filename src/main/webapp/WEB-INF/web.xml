@@ -40,10 +40,6 @@
     <servlet-class>jp.sf.ssoproxy.servlet.ProxyServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>s2servlet</servlet-name>
-    <url-pattern>/s2servlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>ProxyServlet</servlet-name>
     <url-pattern>/proxy/*</url-pattern>
   </servlet-mapping>

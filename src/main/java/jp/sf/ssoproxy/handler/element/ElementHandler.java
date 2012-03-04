@@ -21,10 +21,10 @@ public interface ElementHandler {
 
     public static final String HREF_ATTR = "href";
 
-    public abstract void startElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name, Attributes attributes);
+    void startElement(HtmlHandler htmlHandler, String uri, String localName,
+            String name, Attributes attributes);
 
-    public abstract void endElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name);
+    void endElement(HtmlHandler htmlHandler, String uri, String localName,
+            String name);
 
 }

@@ -7,7 +7,7 @@ import org.apache.commons.httpclient.Cookie;
 
 public class StoredCookie implements Serializable {
 
-    private static final long serialVersionUID = -4076144473672176922L;
+    private static final long serialVersionUID = 1L;
 
     private String domain;
 
@@ -21,14 +21,15 @@ public class StoredCookie implements Serializable {
 
     private boolean secure;
 
-    public StoredCookie(Cookie httpClientCookie) {
+    public StoredCookie(final Cookie httpClientCookie) {
         this(httpClientCookie.getDomain(), httpClientCookie.getName(),
                 httpClientCookie.getValue(), httpClientCookie.getPath(),
                 httpClientCookie.getExpiryDate(), httpClientCookie.getSecure());
     }
 
-    public StoredCookie(String domain, String name, String value, String path,
-            Date expiryDate, boolean secure) {
+    public StoredCookie(final String domain, final String name,
+            final String value, final String path, final Date expiryDate,
+            final boolean secure) {
         this.domain = domain;
         this.name = name;
         this.value = value;
@@ -45,7 +46,7 @@ public class StoredCookie implements Serializable {
         return domain;
     }
 
-    public void setDomain(String domain) {
+    public void setDomain(final String domain) {
         this.domain = domain;
     }
 
@@ -53,7 +54,7 @@ public class StoredCookie implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -61,7 +62,7 @@ public class StoredCookie implements Serializable {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(final String value) {
         this.value = value;
     }
 
@@ -69,7 +70,7 @@ public class StoredCookie implements Serializable {
         return path;
     }
 
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
 
@@ -77,7 +78,7 @@ public class StoredCookie implements Serializable {
         return secure;
     }
 
-    public void setSecure(boolean secure) {
+    public void setSecure(final boolean secure) {
         this.secure = secure;
     }
 
@@ -85,7 +86,7 @@ public class StoredCookie implements Serializable {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(final Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 

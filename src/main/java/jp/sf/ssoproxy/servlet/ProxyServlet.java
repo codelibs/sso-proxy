@@ -17,24 +17,33 @@ import jp.sf.ssoproxy.access.AccessManager;
 import jp.sf.ssoproxy.config.AuthConfig;
 import jp.sf.ssoproxy.config.HostConfig;
 import jp.sf.ssoproxy.config.ProxyConfig;
-import jp.sf.ssoproxy.util.ErrorHandlingUtil;
+import jp.sf.ssoproxy.helper.ErrorHandlingHelper;
+import jp.sf.ssoproxy.helper.LogHelper;
 
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 public class ProxyServlet extends HttpServlet {
 
     private static final long serialVersionUID = 778883232389401884L;
 
-    private static final String PROXY_CONFIG_COMPONENT = "proxyConfig";
-
     private String errorPage;
 
     private Locale systemLocale;
 
+    // TODO move s2 component
     private ServletFileUpload servletFileUpload;
+
+    private S2Container container;
+
+    private ErrorHandlingHelper errorHandlingHelper;
+
+    private LogHelper logHelper;
+
+    private ProxyConfig proxyConfig;
 
     @Override
     public void init() throws ServletException {
@@ -45,11 +54,11 @@ public class ProxyServlet extends HttpServlet {
             errorPage = SSOProxyConstants.DEFAULT_ERROR_JSP;
         }
         // set a system locale
-        String value = getServletConfig().getInitParameter(
+        final String value = getServletConfig().getInitParameter(
                 SSOProxyConstants.SYSTEM_LOCALE_KEY);
         if (value != null) {
             try {
-                String[] values = value.split("_");
+                final String[] values = value.split("_");
                 if (values.length == 3) {
                     systemLocale = new Locale(values[0], values[1], values[2]);
                 } else if (values.length == 2) {
@@ -59,7 +68,7 @@ public class ProxyServlet extends HttpServlet {
                 } else {
                     systemLocale = Locale.ENGLISH;
                 }
-            } catch (RuntimeException e) {
+            } catch (final RuntimeException e) {
                 systemLocale = Locale.ENGLISH;
             }
         } else {
@@ -67,15 +76,15 @@ public class ProxyServlet extends HttpServlet {
         }
 
         // Create a factory for disk-based file items
-        DiskFileItemFactory factory = new DiskFileItemFactory();
+        final DiskFileItemFactory factory = new DiskFileItemFactory();
 
         // Set factory constraints
-        String sizeThreshold = getServletConfig().getInitParameter(
+        final String sizeThreshold = getServletConfig().getInitParameter(
                 "uploadSizeThreshold");
         if (sizeThreshold != null) {
             factory.setSizeThreshold(Integer.parseInt(sizeThreshold));
         }
-        String repositoryPath = getServletConfig().getInitParameter(
+        final String repositoryPath = getServletConfig().getInitParameter(
                 "uploadRepositoryPath");
         if (repositoryPath != null) {
             factory.setRepository(new File(repositoryPath));
@@ -84,95 +93,101 @@ public class ProxyServlet extends HttpServlet {
         // Create a new file upload handler
         servletFileUpload = new ServletFileUpload(factory);
 
+        // Components
+        container = SingletonS2ContainerFactory.getContainer();
+        errorHandlingHelper = SingletonS2Container
+                .getComponent("errorHandlingHelper");
+        logHelper = SingletonS2Container.getComponent("logHelper");
+        proxyConfig = SingletonS2Container.getComponent("proxyConfig");
+
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(final HttpServletRequest request,
+            final HttpServletResponse response) throws ServletException,
+            IOException {
         // needs to check a user name from session by filter
 
-        String pathInfo = request.getPathInfo();
+        final String pathInfo = request.getPathInfo();
         if (pathInfo == null) {
             // error
-            String erroCode = "000002";
-            ErrorHandlingUtil.printLog(erroCode, null, systemLocale);
-            ErrorHandlingUtil.forwardErrorPage(request, response, erroCode,
+            final String erroCode = "000002";
+            logHelper.printLog(erroCode, null, systemLocale);
+            errorHandlingHelper.forwardErrorPage(request, response, erroCode,
                     null, errorPage);
             return;
         }
 
-        int actualPathPos = pathInfo.indexOf("/", 1);
+        final int actualPathPos = pathInfo.indexOf('/', 1);
         if (actualPathPos < 0) {
             // error
-            String erroCode = "000003";
-            ErrorHandlingUtil.printLog(erroCode, null, systemLocale);
-            ErrorHandlingUtil.forwardErrorPage(request, response, erroCode,
+            final String erroCode = "000003";
+            logHelper.printLog(erroCode, null, systemLocale);
+            errorHandlingHelper.forwardErrorPage(request, response, erroCode,
                     null, errorPage);
             return;
         }
 
-        S2Container container = SingletonS2ContainerFactory.getContainer();
-        // Get a proxy configuration
-        ProxyConfig proxyConfig = (ProxyConfig) container
-                .getComponent(PROXY_CONFIG_COMPONENT);
-
         // Get a host configuration by a host config name of a path info
-        String hostConfigName = pathInfo.substring(1, actualPathPos);
-        HostConfig hostConfig = proxyConfig.getHostConfig(hostConfigName);
+        final String hostConfigName = pathInfo.substring(1, actualPathPos);
+        final HostConfig hostConfig = proxyConfig.getHostConfig(hostConfigName);
         if (hostConfig == null) {
             // error
-            String erroCode = "000004";
-            ErrorHandlingUtil.printLog(erroCode,
-                    new Object[] { hostConfigName }, systemLocale);
-            ErrorHandlingUtil.forwardErrorPage(request, response, erroCode,
+            final String erroCode = "000004";
+            logHelper.printLog(erroCode, new Object[] { hostConfigName },
+                    systemLocale);
+            errorHandlingHelper.forwardErrorPage(request, response, erroCode,
                     new Object[] { hostConfigName }, errorPage);
             return;
         }
 
         // Get a access manager by the host config
-        AccessManager accessManager = (AccessManager) container
-                .getComponent(hostConfig.getAccessManagerName());
-        if (accessManager == null) {
+        final String accessManagerName = hostConfig.getAccessManagerName();
+        if (!container.hasComponentDef(accessManagerName)) {
             // error
-            String erroCode = "000005";
-            ErrorHandlingUtil.printLog(erroCode, new Object[] {
-                    hostConfig.getAccessManagerName(), hostConfigName },
-                    systemLocale);
-            ErrorHandlingUtil.forwardErrorPage(request, response, erroCode,
-                    new Object[] { hostConfig.getAccessManagerName(),
-                            hostConfigName }, errorPage);
+            final String erroCode = "000005";
+            logHelper.printLog(erroCode, new Object[] { accessManagerName,
+                    hostConfigName }, systemLocale);
+            errorHandlingHelper.forwardErrorPage(request, response, erroCode,
+                    new Object[] { accessManagerName, hostConfigName },
+                    errorPage);
             return;
         }
+        final AccessManager accessManager = SingletonS2Container
+                .getComponent(accessManagerName);
 
         try {
             // set request encoding
             request.setCharacterEncoding(hostConfig.getEncoding());
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // error
-            ErrorHandlingUtil.printLog(e, systemLocale);
-            ErrorHandlingUtil.forwardErrorPage(request, response, e, errorPage);
+            logHelper.printLog(e, systemLocale);
+            errorHandlingHelper.forwardErrorPage(request, response, e,
+                    errorPage);
             return;
         }
 
         // Check that we have a file upload request
-        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+        final boolean isMultipart = ServletFileUpload
+                .isMultipartContent(request);
 
         Map<String, Object> resultMap = null;
         try {
-            String url = hostConfig.buildUrl(pathInfo.substring(actualPathPos));
+            final String url = hostConfig.buildUrl(pathInfo
+                    .substring(actualPathPos));
             if (isMultipart) {
-
+                // TODO?
             } else {
                 // TODO the url has request parameters or not when checking it in a following method...
-                AuthConfig authConfig = hostConfig.getAuthConfig(request
-                        .getMethod(), url, request.getParameterMap());
+                final AuthConfig authConfig = hostConfig.getAuthConfig(
+                        request.getMethod(), url, request.getParameterMap());
 
                 //  check a login page
                 if (authConfig != null) {
                     // Check a login page
                     resultMap = accessManager.sendLoginPageRequest(request,
                             hostConfig, authConfig);
-                    int statusCode = ((Integer) resultMap
+                    final int statusCode = ((Integer) resultMap
                             .get(SSOProxyConstants.STATUS_CODE_PARAM))
                             .intValue();
                     if (statusCode == 200
@@ -192,7 +207,7 @@ public class ProxyServlet extends HttpServlet {
                 }
             }
 
-            int statusCode = ((Integer) resultMap
+            final int statusCode = ((Integer) resultMap
                     .get(SSOProxyConstants.STATUS_CODE_PARAM)).intValue();
             // redirect
             if (isRedirectStatusCode(statusCode)) {
@@ -213,11 +228,12 @@ public class ProxyServlet extends HttpServlet {
                                     .get(SSOProxyConstants.MIME_TYPE_PARAM)));
             // flush
             response.flushBuffer();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // error
-            ErrorHandlingUtil.printLog(e, systemLocale);
+            logHelper.printLog(e, systemLocale);
             //TODO error
-            ErrorHandlingUtil.forwardErrorPage(request, response, e, errorPage);
+            errorHandlingHelper.forwardErrorPage(request, response, e,
+                    errorPage);
             return;
         } finally {
             accessManager.release(resultMap);
@@ -226,12 +242,13 @@ public class ProxyServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(final HttpServletRequest request,
+            final HttpServletResponse response) throws ServletException,
+            IOException {
         doGet(request, response);
     }
 
-    private boolean isRedirectStatusCode(int statusCode) {
+    private boolean isRedirectStatusCode(final int statusCode) {
         switch (statusCode) {
         case 301:
         case 302:

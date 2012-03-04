@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jp.sf.ssoproxy.SSOProxyConstants;
-import jp.sf.ssoproxy.util.ErrorHandlingUtil;
+import jp.sf.ssoproxy.helper.ErrorHandlingHelper;
+import jp.sf.ssoproxy.helper.LogHelper;
+
+import org.seasar.framework.container.SingletonS2Container;
 
 public abstract class AbstractAuthFilter implements Filter {
 
@@ -23,7 +26,12 @@ public abstract class AbstractAuthFilter implements Filter {
 
     protected String currentUserKey;
 
-    public void init(FilterConfig config) throws ServletException {
+    protected ErrorHandlingHelper errorHandlingHelper;
+
+    protected LogHelper logHelper;
+
+    @Override
+    public void init(final FilterConfig config) throws ServletException {
         // set an current user key
         currentUserKey = config
                 .getInitParameter(SSOProxyConstants.CURRENT_REMOTE_USER_KEY);
@@ -38,11 +46,11 @@ public abstract class AbstractAuthFilter implements Filter {
         }
 
         // set a system locale
-        String value = config
+        final String value = config
                 .getInitParameter(SSOProxyConstants.SYSTEM_LOCALE_KEY);
         if (value != null) {
             try {
-                String[] values = value.split("_");
+                final String[] values = value.split("_");
                 if (values.length == 3) {
                     systemLocale = new Locale(values[0], values[1], values[2]);
                 } else if (values.length == 2) {
@@ -52,32 +60,39 @@ public abstract class AbstractAuthFilter implements Filter {
                 } else {
                     systemLocale = Locale.ENGLISH;
                 }
-            } catch (RuntimeException e) {
+            } catch (final RuntimeException e) {
                 systemLocale = Locale.ENGLISH;
             }
         } else {
             systemLocale = Locale.ENGLISH;
         }
+
+        errorHandlingHelper = SingletonS2Container
+                .getComponent("errorHandlingHelper");
+        logHelper = SingletonS2Container.getComponent("logHelper");
     }
 
+    @Override
     public void destroy() {
 
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+    @Override
+    public void doFilter(final ServletRequest request,
+            final ServletResponse response, final FilterChain chain)
+            throws IOException, ServletException {
 
         if (request instanceof HttpServletRequest
                 && response instanceof HttpServletResponse) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String remoteUser = getRemoteUser(httpRequest);
+            final HttpServletRequest httpRequest = (HttpServletRequest) request;
+            final String remoteUser = getRemoteUser(httpRequest);
             if (remoteUser != null) {
                 chain.doFilter(request, response);
             } else {
                 // error
-                String erroCode = "000008";
-                ErrorHandlingUtil.printLog(erroCode, null, systemLocale);
-                ErrorHandlingUtil.forwardErrorPage(
+                final String erroCode = "000008";
+                logHelper.printLog(erroCode, null, systemLocale);
+                errorHandlingHelper.forwardErrorPage(
                         (HttpServletRequest) request,
                         (HttpServletResponse) response, erroCode, null,
                         errorPage);

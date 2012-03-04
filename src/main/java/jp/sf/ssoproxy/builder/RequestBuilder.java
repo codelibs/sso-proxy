@@ -13,8 +13,7 @@ public interface RequestBuilder {
 
     public static int AUTH_PROCESS = 1 << 2;
 
-    public abstract void build(int type, HttpServletRequest request,
-            HostConfig hostConfig, HttpMethod httpMethod,
-            RequestBuilderChain chain);
+    void build(int type, HttpServletRequest request, HostConfig hostConfig,
+            HttpMethod httpMethod, RequestBuilderChain chain);
 
 }

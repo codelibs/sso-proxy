@@ -1,53 +1,56 @@
 package jp.sf.ssoproxy;
 
-public class SSOProxyException extends Exception {
+public class SSOProxyException extends RuntimeException {
 
-    private static final long serialVersionUID = -8536748731584194468L;
+    private static final long serialVersionUID = 1L;
 
     protected String messageId;
 
     protected Object[] args;
 
-    public SSOProxyException(String messageId) {
+    public SSOProxyException(final String messageId) {
         super(messageId);
         this.messageId = messageId;
     }
 
-    public SSOProxyException(String messageId, Object[] args) {
+    public SSOProxyException(final String messageId, final Object[] args) {
         super(messageId);
         this.messageId = messageId;
         this.args = args;
     }
 
-    public SSOProxyException(String messageId, String message, Throwable cause) {
+    public SSOProxyException(final String messageId, final String message,
+            final Throwable cause) {
         super(message, cause);
         this.messageId = messageId;
     }
 
-    public SSOProxyException(String messageId, Object[] args, String message,
-            Throwable cause) {
+    public SSOProxyException(final String messageId, final Object[] args,
+            final String message, final Throwable cause) {
         super(message, cause);
         this.messageId = messageId;
         this.args = args;
     }
 
-    public SSOProxyException(String messageId, String message) {
+    public SSOProxyException(final String messageId, final String message) {
         super(message);
         this.messageId = messageId;
     }
 
-    public SSOProxyException(String messageId, Object[] args, String message) {
+    public SSOProxyException(final String messageId, final Object[] args,
+            final String message) {
         super(message);
         this.messageId = messageId;
         this.args = args;
     }
 
-    public SSOProxyException(String messageId, Throwable cause) {
+    public SSOProxyException(final String messageId, final Throwable cause) {
         super(cause);
         this.messageId = messageId;
     }
 
-    public SSOProxyException(String messageId, Object[] args, Throwable cause) {
+    public SSOProxyException(final String messageId, final Object[] args,
+            final Throwable cause) {
         super(cause);
         this.messageId = messageId;
         this.args = args;
@@ -64,7 +67,7 @@ public class SSOProxyException extends Exception {
      * @param messageId
      *            The messageId to set.
      */
-    public void setMessageId(String messageId) {
+    public void setMessageId(final String messageId) {
         this.messageId = messageId;
     }
 
@@ -79,7 +82,7 @@ public class SSOProxyException extends Exception {
      * @param args
      *            The args to set.
      */
-    public void setArgs(Object[] args) {
+    public void setArgs(final Object[] args) {
         this.args = args;
     }
 

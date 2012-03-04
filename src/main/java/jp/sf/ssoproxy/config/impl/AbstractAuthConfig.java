@@ -45,15 +45,16 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#checkLoginPageUrl(java.lang.String)
      */
-    public boolean checkLoginPageUrl(String method, String url,
-            Map<String, String[]> params) throws ConfigException {
+    @Override
+    public boolean checkLoginPageUrl(final String method, final String url,
+            final Map<String, String[]> params) {
         if (url != null && url.equals(loginPageUrl)
                 && loginPageMethod.equals(method)) {
             if (loginPageDataList != null) {
-                for (Map<String, String> map : loginPageDataList) {
-                    String name = map.get(DATA_NAME);
-                    String value = map.get(DATA_VALUE);
-                    String[] values = params.get(name);
+                for (final Map<String, String> map : loginPageDataList) {
+                    final String name = map.get(DATA_NAME);
+                    final String value = map.get(DATA_VALUE);
+                    final String[] values = params.get(name);
                     if (value == null || values == null) {
                         return false;
                     } else if (values.length == 0) {
@@ -68,11 +69,11 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return false;
     }
 
-    public boolean checkLoginPage(InputStream inputStream)
-            throws ConfigException {
+    @Override
+    public boolean checkLoginPage(final InputStream inputStream) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    inputStream, loginPageEncoding));
+            final BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream, loginPageEncoding));
             String line = reader.readLine();
             while (line != null) {
                 if (line.indexOf(loginPageKey) >= 0) {
@@ -82,7 +83,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
             }
             //        } catch (UnsupportedEncodingException e) {
             //        } catch (IOException e) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // error
             throw new ConfigException("000013", e);
         }
@@ -92,16 +93,18 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#buildLoginHttpMethod()
      */
-    public HttpMethod buildLoginHttpMethod(HttpServletRequest request)
-            throws ConfigException {
+    @Override
+    public HttpMethod buildLoginHttpMethod(final HttpServletRequest request) {
         if (SSOProxyConstants.POST_METHOD.equals(loginPageMethod)) {
-            return UrlBuilderUtil.buildPostMethod(loginPageUrl,
+            return UrlBuilderUtil.buildPostMethod(
+                    loginPageUrl,
                     getParameterMap(request, SSOProxyConstants.GET_METHOD,
                             loginPageDataList),
                     getParameterMap(request, SSOProxyConstants.POST_METHOD,
                             loginPageDataList), loginPageEncoding);
         } else if (SSOProxyConstants.GET_METHOD.equals(loginPageMethod)) {
-            return UrlBuilderUtil.buildGetMethod(loginPageUrl,
+            return UrlBuilderUtil.buildGetMethod(
+                    loginPageUrl,
                     getParameterMap(request, SSOProxyConstants.GET_METHOD,
                             loginPageDataList), loginPageEncoding);
         }
@@ -112,31 +115,34 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     /* (non-Javadoc)
      * @see jp.sf.ssoproxy.config.impl.AuthConfig#buildAuthHttpMethod()
      */
-    public HttpMethod buildAuthHttpMethod(HttpServletRequest request)
-            throws ConfigException {
+    @Override
+    public HttpMethod buildAuthHttpMethod(final HttpServletRequest request) {
         if (SSOProxyConstants.POST_METHOD.equals(authPageMethod)) {
-            return UrlBuilderUtil.buildPostMethod(authPageUrl, getParameterMap(
-                    request, SSOProxyConstants.GET_METHOD, authPageDataList),
+            return UrlBuilderUtil.buildPostMethod(
+                    authPageUrl,
+                    getParameterMap(request, SSOProxyConstants.GET_METHOD,
+                            authPageDataList),
                     getParameterMap(request, SSOProxyConstants.POST_METHOD,
                             authPageDataList), authPageEncoding);
         } else if (SSOProxyConstants.GET_METHOD.equals(authPageMethod)) {
-            return UrlBuilderUtil.buildGetMethod(authPageUrl, getParameterMap(
-                    request, SSOProxyConstants.GET_METHOD, authPageDataList),
-                    authPageEncoding);
+            return UrlBuilderUtil.buildGetMethod(
+                    authPageUrl,
+                    getParameterMap(request, SSOProxyConstants.GET_METHOD,
+                            authPageDataList), authPageEncoding);
         }
         // error
         throw new ConfigException("000015", new Object[] { authPageUrl });
     }
 
-    protected Map<String, String[]> getParameterMap(HttpServletRequest request,
-            String method, List<Map<String, String>> dataList)
-            throws ConfigException {
-        Map<String, String[]> params = new HashMap<String, String[]>();
+    protected Map<String, String[]> getParameterMap(
+            final HttpServletRequest request, final String method,
+            final List<Map<String, String>> dataList) {
+        final Map<String, String[]> params = new HashMap<String, String[]>();
         if (dataList != null) {
-            for (Map<String, String> entry : dataList) {
+            for (final Map<String, String> entry : dataList) {
                 if (method.equals(entry.get(DATA_METHOD))) {
                     // TODO support 1 parameter only now..
-                    String[] values = new String[1];
+                    final String[] values = new String[1];
                     values[0] = getDataValue(request, entry.get(DATA_VALUE));
                     params.put(entry.get(DATA_NAME), values);
                 }
@@ -146,13 +152,13 @@ public abstract class AbstractAuthConfig implements AuthConfig {
     }
 
     protected abstract String getDataValue(HttpServletRequest request,
-            String value) throws ConfigException;
+            String value);
 
     public String getAuthPageMethod() {
         return authPageMethod;
     }
 
-    public void setAuthPageMethod(String authPageMethod) {
+    public void setAuthPageMethod(final String authPageMethod) {
         this.authPageMethod = authPageMethod;
     }
 
@@ -160,7 +166,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return authPageUrl;
     }
 
-    public void setAuthPageUrl(String authPageUrl) {
+    public void setAuthPageUrl(final String authPageUrl) {
         this.authPageUrl = authPageUrl;
     }
 
@@ -168,7 +174,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return authPageEncoding;
     }
 
-    public void setAuthPageEncoding(String authPageEncoding) {
+    public void setAuthPageEncoding(final String authPageEncoding) {
         this.authPageEncoding = authPageEncoding;
     }
 
@@ -176,7 +182,8 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return authPageDataList;
     }
 
-    public void setAuthPageDataList(List<Map<String, String>> authPageDataList) {
+    public void setAuthPageDataList(
+            final List<Map<String, String>> authPageDataList) {
         this.authPageDataList = authPageDataList;
     }
 
@@ -184,7 +191,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return loginPageMethod;
     }
 
-    public void setLoginPageMethod(String loginPageMethod) {
+    public void setLoginPageMethod(final String loginPageMethod) {
         this.loginPageMethod = loginPageMethod;
     }
 
@@ -192,7 +199,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return loginPageUrl;
     }
 
-    public void setLoginPageUrl(String loginPageUrl) {
+    public void setLoginPageUrl(final String loginPageUrl) {
         this.loginPageUrl = loginPageUrl;
     }
 
@@ -200,7 +207,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return loginPageEncoding;
     }
 
-    public void setLoginPageEncoding(String loginPageEncoding) {
+    public void setLoginPageEncoding(final String loginPageEncoding) {
         this.loginPageEncoding = loginPageEncoding;
     }
 
@@ -208,7 +215,8 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return loginPageDataList;
     }
 
-    public void setLoginPageDataList(List<Map<String, String>> loginPageDataList) {
+    public void setLoginPageDataList(
+            final List<Map<String, String>> loginPageDataList) {
         this.loginPageDataList = loginPageDataList;
     }
 
@@ -216,7 +224,7 @@ public abstract class AbstractAuthConfig implements AuthConfig {
         return loginPageKey;
     }
 
-    public void setLoginPageKey(String loginPageKey) {
+    public void setLoginPageKey(final String loginPageKey) {
         this.loginPageKey = loginPageKey;
     }
 

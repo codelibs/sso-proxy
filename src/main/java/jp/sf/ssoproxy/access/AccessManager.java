@@ -11,27 +11,23 @@ import jp.sf.ssoproxy.config.ProxyConfig;
 
 public interface AccessManager {
 
-    public abstract Map<String, Object> sendRequest(HttpServletRequest request,
-            HostConfig hostConfig, String url, String encoding)
-            throws AccessException;
+    Map<String, Object> sendRequest(HttpServletRequest request,
+            HostConfig hostConfig, String url, String encoding);
 
-    public abstract void sendResponse(HttpServletRequest request,
+    void sendResponse(HttpServletRequest request, HttpServletResponse response,
+            Map<String, Object> resultMap, ProxyConfig proxyConfig,
+            String hostConfigName, String forwarderName);
+
+    Map<String, Object> sendLoginPageRequest(HttpServletRequest request,
+            HostConfig hostConfig, AuthConfig authConfig);
+
+    Map<String, Object> sendAuthPageRequest(HttpServletRequest request,
+            HostConfig hostConfig, AuthConfig authConfig);
+
+    void redirectResponse(HttpServletRequest request,
             HttpServletResponse response, Map<String, Object> resultMap,
-            ProxyConfig proxyConfig, String hostConfigName, String forwarderName)
-            throws AccessException;
+            ProxyConfig proxyConfig);
 
-    public abstract Map<String, Object> sendLoginPageRequest(
-            HttpServletRequest request, HostConfig hostConfig,
-            AuthConfig authConfig) throws AccessException;
-
-    public abstract Map<String, Object> sendAuthPageRequest(
-            HttpServletRequest request, HostConfig hostConfig,
-            AuthConfig authConfig) throws AccessException;
-
-    public abstract void redirectResponse(HttpServletRequest request,
-            HttpServletResponse response, Map<String, Object> resultMap,
-            ProxyConfig proxyConfig) throws AccessException;
-
-    public abstract void release(Map<String, Object> resultMap);
+    void release(Map<String, Object> resultMap);
 
 }

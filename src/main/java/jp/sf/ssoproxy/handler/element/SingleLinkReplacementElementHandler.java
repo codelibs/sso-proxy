@@ -6,19 +6,21 @@ import jp.sf.ssoproxy.util.ElementHandlerUtil;
 import org.xml.sax.Attributes;
 
 public class SingleLinkReplacementElementHandler extends DefaultElementHandler {
-    private String replacedAttr;
+    private final String replacedAttr;
 
-    public SingleLinkReplacementElementHandler(String replacedAttr) {
+    public SingleLinkReplacementElementHandler(final String replacedAttr) {
         this.replacedAttr = replacedAttr;
     }
 
-    public void startElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name, Attributes attributes) {
+    @Override
+    public void startElement(final HtmlHandler htmlHandler, final String uri,
+            final String localName, final String name,
+            final Attributes attributes) {
         if (htmlHandler.isWritable()) {
             htmlHandler.write(OPEN_TAG_PREFIX);
             htmlHandler.write(name.toLowerCase());
             for (int i = 0; i < attributes.getLength(); i++) {
-                String attrName = attributes.getQName(i).toLowerCase();
+                final String attrName = attributes.getQName(i).toLowerCase();
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attrName);
                 htmlHandler.write(ATTR_VALUE_EQUAL);

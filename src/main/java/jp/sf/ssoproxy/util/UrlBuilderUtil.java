@@ -14,13 +14,13 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 public class UrlBuilderUtil {
-    public static GetMethod buildGetMethod(String url,
-            Map<String, String[]> getMethodParams, String encoding) {
+    public static GetMethod buildGetMethod(final String url,
+            final Map<String, String[]> getMethodParams, final String encoding) {
         return new GetMethod(buildGetMethodUrl(url, getMethodParams, encoding));
     }
 
-    public static String buildGetMethodUrl(String url,
-            Map<String, String[]> getMethodParams, String encoding) {
+    private static String buildGetMethodUrl(final String url,
+            final Map<String, String[]> getMethodParams, final String encoding) {
         if (getMethodParams.isEmpty()) {
             return url;
         }
@@ -31,56 +31,56 @@ public class UrlBuilderUtil {
         }
 
         // request parameters
-        StringBuilder query = new StringBuilder(url);
-        for (Map.Entry<String, String[]> entry : getMethodParams.entrySet()) {
-            String key = entry.getKey();
-            String[] value = entry.getValue();
-            for (int i = 0; i < value.length; i++) {
+        final StringBuilder query = new StringBuilder(url);
+        for (final Map.Entry<String, String[]> entry : getMethodParams
+                .entrySet()) {
+            final String key = entry.getKey();
+            final String[] value = entry.getValue();
+            for (final String element : value) {
                 if (alreadyAdded) {
-                    query
-                            .append(SSOProxyConstants.REQUEST_PARAM_QUERY_SEPARATOR);
+                    query.append(SSOProxyConstants.REQUEST_PARAM_QUERY_SEPARATOR);
                 } else {
-                    query
-                            .append(SSOProxyConstants.REQUEST_PARAM_URL_SEPARATOR);
+                    query.append(SSOProxyConstants.REQUEST_PARAM_URL_SEPARATOR);
                     alreadyAdded = true;
                 }
                 query.append(encode(key, encoding));
                 query.append(SSOProxyConstants.REQUEST_PARAM_EQUAL);
-                query.append(encode(value[i], encoding));
+                query.append(encode(element, encoding));
             }
         }
         return query.toString();
     }
 
-    public static PostMethod buildPostMethod(String url,
-            Map<String, String[]> postMethodParams, String encoding) {
+    public static PostMethod buildPostMethod(final String url,
+            final Map<String, String[]> postMethodParams, final String encoding) {
         return buildPostMethod(url, new HashMap<String, String[]>(0),
                 postMethodParams, encoding);
     }
 
-    public static PostMethod buildPostMethod(String url,
-            Map<String, String[]> getMethodParams,
-            Map<String, String[]> postMethodParams, String encoding) {
-        PostMethod postMethod = new PostMethod(buildGetMethodUrl(url,
+    public static PostMethod buildPostMethod(final String url,
+            final Map<String, String[]> getMethodParams,
+            final Map<String, String[]> postMethodParams, final String encoding) {
+        final PostMethod postMethod = new PostMethod(buildGetMethodUrl(url,
                 getMethodParams, encoding));
         postMethod.getParams().setContentCharset(encoding);
         // request parameters
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, String[]> entry : postMethodParams.entrySet()) {
-            String key = entry.getKey();
-            String[] value = entry.getValue();
-            for (int i = 0; i < value.length; i++) {
-                pairs.add(new NameValuePair(key, value[i]));
+        final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        for (final Map.Entry<String, String[]> entry : postMethodParams
+                .entrySet()) {
+            final String key = entry.getKey();
+            final String[] value = entry.getValue();
+            for (final String element : value) {
+                pairs.add(new NameValuePair(key, element));
             }
         }
         postMethod.setRequestBody(pairs.toArray(new NameValuePair[0]));
         return postMethod;
     }
 
-    private static String encode(String value, String encoding) {
+    private static String encode(final String value, final String encoding) {
         try {
             return URLEncoder.encode(value, encoding);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             return value;
         }
     }

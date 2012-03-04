@@ -9,19 +9,22 @@ import org.xml.sax.Attributes;
 
 public class MultipleLinkReplacementElementHandler extends
         DefaultElementHandler {
-    private List<String> replacedAttrs;
+    private final List<String> replacedAttrs;
 
-    public MultipleLinkReplacementElementHandler(List<String> replacedAttrs) {
+    public MultipleLinkReplacementElementHandler(
+            final List<String> replacedAttrs) {
         this.replacedAttrs = replacedAttrs;
     }
 
-    public void startElement(HtmlHandler htmlHandler, String uri,
-            String localName, String name, Attributes attributes) {
+    @Override
+    public void startElement(final HtmlHandler htmlHandler, final String uri,
+            final String localName, final String name,
+            final Attributes attributes) {
         if (htmlHandler.isWritable()) {
             htmlHandler.write(OPEN_TAG_PREFIX);
             htmlHandler.write(name.toLowerCase());
             for (int i = 0; i < attributes.getLength(); i++) {
-                String attrName = attributes.getQName(i).toLowerCase();
+                final String attrName = attributes.getQName(i).toLowerCase();
                 htmlHandler.write(SPACE);
                 htmlHandler.write(attrName);
                 htmlHandler.write(ATTR_VALUE_EQUAL);
